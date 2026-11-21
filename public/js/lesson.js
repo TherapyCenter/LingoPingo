@@ -45,11 +45,11 @@ export function checkText(input, answerStr, lang) {
     const flat = (x) => strip(x).replace(/[\s']/g, '');
     for (const a of options) if (flat(a) === flat(input)) return { ok: true, best };
   }
-  for (const a of options) if (strip(a) === si) return { ok: true, best: a, note: 'Achte auf die Sonderzeichen' };
+  for (const a of options) if (strip(a) === si) return { ok: true, best: a, note: 'accents' };
   for (const a of options) {
     const sa = strip(a);
     const allowed = sa.length >= 14 ? 2 : sa.length >= 5 ? 1 : 0;
-    if (allowed && lev(si, sa) <= allowed) return { ok: true, best: a, note: 'Kleiner Tippfehler' };
+    if (allowed && lev(si, sa) <= allowed) return { ok: true, best: a, note: 'typo' };
   }
   return { ok: false, best: options[0] };
 }
@@ -147,7 +147,7 @@ function optionCount(d) { return d < 2 ? 3 : d < 6 ? 4 : 5; }
 
 // Zwei Items "kollidieren", wenn sie in irgendeiner Sprache eine gleiche Übersetzung haben
 // (z. B. Arzt/Ärztin → "doctor"). Solche Paare dürfen nie gemeinsam als Optionen erscheinen.
-const FIELDS = ['de', ...Object.keys(LANGS)];
+const FIELDS = Object.keys(LANGS);
 export function conflicts(a, b) {
   if (a.key === b.key) return true;
   return FIELDS.some((f) => {
@@ -184,7 +184,8 @@ function tileDistractors(answerTokens, pool, field, n) {
 
 // Baut eine einzelne Aufgabe
 export function makeExercise(p, lang, item, type, d, pool) {
-  const ex = { type, item, lang, key: item.key, kind: item.kind };
+  const nat = p.native || 'de'; // learner's own language = source language
+  const ex = { type, item, lang, nat, key: item.key, kind: item.kind };
   const n = optionCount(d);
   switch (type) {
     case 'pickImage': {
@@ -196,7 +197,7 @@ export function makeExercise(p, lang, item, type, d, pool) {
       ex.options = shuffle([item, ...distractors(item, pool, n - 1, lang)]);
       break;
     case 'toNative':
-      ex.options = shuffle([item, ...distractors(item, pool, n - 1, 'de')]);
+      ex.options = shuffle([item, ...distractors(item, pool, n - 1, nat)]);
       break;
     case 'buildTarget': case 'listenBuild': {
       const ans = tokens(main(item[lang]));
@@ -204,8 +205,8 @@ export function makeExercise(p, lang, item, type, d, pool) {
       break;
     }
     case 'buildNative': {
-      const ans = tokens(item.de);
-      ex.tiles = shuffle([...ans, ...tileDistractors(ans, pool, 'de', clamp(2 + Math.floor(d / 2), 2, 6))]);
+      const ans = tokens(main(item[nat]));
+      ex.tiles = shuffle([...ans, ...tileDistractors(ans, pool, nat, clamp(2 + Math.floor(d / 2), 2, 6))]);
       break;
     }
     default: break;
@@ -213,13 +214,13 @@ export function makeExercise(p, lang, item, type, d, pool) {
   return ex;
 }
 
-function matchExercise(lang, items) {
+function matchExercise(p, lang, items) {
   const words = [];
   for (const w of shuffle(items.filter((x) => x.kind === 'word'))) {
     if (words.length >= 5) break;
     if (!words.some((o) => conflicts(o, w))) words.push(w);
   }
-  return { type: 'match', lang, key: null, items: words, left: shuffle(words), right: shuffle(words) };
+  return { type: 'match', lang, nat: p.native || 'de', key: null, items: words, left: shuffle(words), right: shuffle(words) };
 }
 
 // Gewichtete Auswahl: schwache und lange nicht gesehene Items zuerst
@@ -282,8 +283,8 @@ export function buildSession(p, lang, opts) {
   // Paare-Zuordnen-Aufgabe einstreuen
   if (mode === 'lesson' || mode === 'practice') {
     const wordsAvail = [...focus, ...extra].filter((x) => x.kind === 'word');
-    if (wordsAvail.length >= 4) list.splice(Math.floor(list.length / 2), 0, matchExercise(lang, wordsAvail));
-    if (exam && wordsAvail.length >= 4) list.push(matchExercise(lang, wordsAvail));
+    if (wordsAvail.length >= 4) list.splice(Math.floor(list.length / 2), 0, matchExercise(p, lang, wordsAvail));
+    if (exam && wordsAvail.length >= 4) list.push(matchExercise(p, lang, wordsAvail));
   }
   // nicht zweimal dieselbe Aufgabe direkt hintereinander
   for (let i = 1; i < list.length; i++) if (list[i].key && list[i].key === list[i - 1].key && i + 1 < list.length) [list[i], list[i + 1]] = [list[i + 1], list[i]];
@@ -305,9 +306,5 @@ export function highestUnit(p) {
   return h;
 }
 
-export function unitLessonLabel(ui, li) {
-  if (li === LESSONS_PER_UNIT - 1) return 'Meisterprüfung';
-  return `Lektion ${li + 1}`;
-}
 
 export { pick, unitProgress };

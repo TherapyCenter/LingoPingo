@@ -52,9 +52,9 @@ export const ACHIEVEMENTS = [
   { id: 'turbo', icon: '⏱️', name: 'Turbo', desc: '15 richtige in einer Turbo-Runde', test: (p) => p.stats.bestTurbo >= 15 },
 ];
 
-export function newProfile(name, avatar) {
+export function newProfile(name, avatar, native = 'de') {
   return {
-    name, avatar, createdAt: Date.now(),
+    name, avatar, native, createdAt: Date.now(),
     xp: 0, level: 1, gems: 50,
     hearts: MAX_HEARTS, heartsAt: Date.now(),
     streak: 0, bestStreak: 0, lastDay: null, freezes: 0,

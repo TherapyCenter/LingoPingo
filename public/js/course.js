@@ -7,6 +7,7 @@ import TR from './lang/tr.js';
 import ZH from './lang/zh.js';
 
 export const LANGS = {
+  de: { name: 'Deutsch', native: 'Deutsch', flag: '🇩🇪', tts: 'de-DE', accents: 'äöüß' },
   es: { name: 'Spanisch', native: 'Español', flag: '🇪🇸', tts: 'es-ES', accents: 'áéíóúñü¿¡' },
   en: { name: 'Englisch', native: 'English', flag: '🇬🇧', tts: 'en-GB', accents: '' },
   hr: { name: 'Kroatisch', native: 'Hrvatski', flag: '🇭🇷', tts: 'hr-HR', accents: 'čćšžđ' },
@@ -599,6 +600,7 @@ const FLAGS = {
   es: '<rect width="30" height="20" fill="#c60b1e"/><rect y="5" width="30" height="10" fill="#ffc400"/>',
   en: '<rect width="30" height="20" fill="#012169"/><path d="M0 0L30 20M30 0L0 20" stroke="#fff" stroke-width="4"/><path d="M0 0L30 20M30 0L0 20" stroke="#c8102e" stroke-width="1.5"/><path d="M15 0V20M0 10H30" stroke="#fff" stroke-width="6"/><path d="M15 0V20M0 10H30" stroke="#c8102e" stroke-width="3.5"/>',
   hr: '<rect width="30" height="20" fill="#171796"/><rect width="30" height="13.3" fill="#fff"/><rect width="30" height="6.7" fill="#f00"/><path d="M12 5.5h6v6.5a3 3 0 0 1-6 0z" fill="#fff" stroke="#f00" stroke-width=".4"/><path d="M12 5.5h1.5v1.5H12zM15 5.5h1.5v1.5H15zM13.5 7h1.5v1.5h-1.5zM16.5 7H18v1.5h-1.5zM12 8.5h1.5V10H12zM15 8.5h1.5V10H15zM13.5 10h1.5v1.5h-1.5zM16.5 10H18v1.5h-1.5zM12 11.5h1.5V13H12zM15 11.5h1.5V13H15zM13.5 13h1.5v1.5h-1.5z" fill="#f00"/>',
+  de: '<rect width="30" height="20" fill="#ffce00"/><rect width="30" height="13.4" fill="#dd0000"/><rect width="30" height="6.7" fill="#000"/>',
   it: '<rect width="30" height="20" fill="#fff"/><rect width="10" height="20" fill="#009246"/><rect x="20" width="10" height="20" fill="#ce2b37"/>',
   fr: '<rect width="30" height="20" fill="#fff"/><rect width="10" height="20" fill="#0055a4"/><rect x="20" width="10" height="20" fill="#ef4135"/>',
   tr: `<rect width="30" height="20" fill="#e30a17"/><circle cx="11" cy="10" r="5" fill="#fff"/><circle cx="12.3" cy="10" r="4" fill="#e30a17"/>${star(17.6, 10, 2.3, '#fff', 36)}`,

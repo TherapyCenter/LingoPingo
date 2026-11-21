@@ -106,7 +106,7 @@ export const hasVoice = (lang) => {
   if (!voices.length) loadVoices(); return !!voiceFor(lang);
 };
 export const voiceName = (lang) => {
-  if (AB) return AB.hasLang(tagOf(lang)) ? `Android-Stimme (${tagOf(lang)})` : null;
+  if (AB) return AB.hasLang(tagOf(lang)) ? `Android · ${tagOf(lang)}` : null;
   if (!voices.length) loadVoices(); return voiceFor(lang)?.name || null;
 };
 

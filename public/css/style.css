@@ -363,3 +363,12 @@ h1, h2, h3 { margin: .3em 0; font-weight: 800; }
 .choice .py, .mt .py { display: inline; margin: 0 0 0 .45em; }
 .server-row { display: flex; gap: 8px; align-items: center; }
 .server-row .input { flex: 1; min-width: 0; }
+
+/* Own-language (UI) selection */
+.ui-lang { align-self: flex-end; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; }
+.ui-sel { font: inherit; font-size: .95rem; font-weight: 700; padding: 6px 10px; border-radius: 12px; border: 2px solid var(--line); background: var(--bg2); color: var(--text); }
+.settings .ui-sel { font-size: .9rem; }
+.lang-pick { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 4px; }
+.lp-btn { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 7px 2px; border-radius: 12px; border: 2px solid var(--line); background: var(--card); color: var(--text); cursor: pointer; }
+.lp-btn small { font-size: .7rem; font-weight: 700; }
+.lp-btn.sel { border-color: var(--blue); background: color-mix(in srgb, var(--blue) 12%, var(--card)); }

@@ -1,6 +1,7 @@
 # 🐧 LingoPingo
 
-Verspielte Sprachlern-Web-App (Duolingo-Stil) für **Deutsch → Spanisch, Englisch, Kroatisch, Italienisch, Französisch, Türkisch, Chinesisch**.
+Verspielte Sprachlern-Web-App (Duolingo-Stil) in **8 Sprachen**: Deutsch, Englisch, Spanisch, Französisch, Italienisch, Kroatisch, Türkisch, Chinesisch.
+Jede davon kann Muttersprache (Oberfläche + Aufgaben) oder Lernsprache sein – also 56 Sprachkombinationen.
 Mobile-first, läuft in Docker oder als Android-App, keine externen Abhängigkeiten.
 
 ## Starten
@@ -23,6 +24,7 @@ Profile und Fortschritt liegen im Volume `lingopingo-data` (`/data/profiles.json
 | Bereich | Was drin ist |
 |---|---|
 | **Lernpfad** | 27 Einheiten (Begrüßung, Essen, Tiere, Farben, Zahlen, Familie, Reisen, Alltag, Gefühle, Wetter, Restaurant, Kleidung, Körper, Zuhause, Einkaufen, Berufe, Wochentage, Fragen, Natur, Freizeit, Beim Arzt, Tagesablauf, Stadt, Schule, Technik, Sport, Feiern) mit je 4 Lektionen + Meisterprüfung 👑 |
+| **Mehrsprachig** | Beim Anlegen des Profils (oder später unter *Profil → Meine Sprache*) wählt man die eigene Sprache. Danach richten sich Oberfläche, Tipps und Aufgaben; gelernt werden kann jede andere Sprache. Der Fortschritt hängt an der Lernsprache und bleibt beim Wechsel erhalten. |
 | **Chinesisch** | Zeichen mit Pinyin als Lesehilfe. Beim Tippen reicht Pinyin, Töne und Leerzeichen sind optional (`wo he shui` = 我喝水). |
 | **Aufgabentypen** | Bild wählen, Übersetzung wählen, Hören & wählen, Paare finden, Satz aus Bausteinen bauen, Wort/Satz tippen, Diktat, Sprechen 🎤 |
 | **Steigende Schwierigkeit** | Die Schwierigkeit (0–10) ergibt sich aus Einheit, Lektion, Level und deiner Trefferquote. Sie bestimmt Aufgabentypen (von Bildkarten bis zum freien Schreiben), die Anzahl der Antwortoptionen, zusätzliche Ablenker-Bausteine und weniger Bild-Hilfen. Wer >92 % richtig hat, bekommt schwerere Aufgaben, bei vielen Fehlern wird es leichter. |
@@ -61,6 +63,7 @@ node android/build.mjs        # oder: npm run apk
    Alternativen mit `|` trennen
 2. In `public/js/course.js` importieren, in `PACKS` und `LANGS` eintragen, z. B. `pt: { name: 'Portugiesisch', native: 'Português', flag: '🇵🇹', tts: 'pt-PT', accents: 'áâãàçéêíóôõú' }`
 3. Optional eine SVG-Flagge in `FLAGS` ergänzen
+4. Als Oberflächensprache: `public/js/i18n/xx.js` anlegen (Vorlage: `en.js`) und in `public/js/i18n.js` eintragen
 
 Neue Einheiten sind einfach weitere Objekte im Array `UNITS`.
 
@@ -75,6 +78,7 @@ public/js/lesson.js    Lektionsgenerator, Schwierigkeit, Antwortprüfung
 public/js/store.js     Profile, XP/Level/Streak/Herzen/Erfolge, Sync Server ↔ localStorage
 public/js/course.js    Kursinhalte (DE/ES/EN/HR) + Zusammenführung der Sprachpakete
 public/js/lang/*.js    Sprachpakete Italienisch, Französisch, Türkisch, Chinesisch
+public/js/i18n.js      Oberflächen-Übersetzung (t()), Texte je Sprache in public/js/i18n/xx.js
 android/               Android-App (WebView + native Sprachausgabe/-erkennung), Build-Skript build.mjs
 public/js/audio.js     Soundeffekte, Vorlesen, Spracherkennung
 public/js/mascot.js    Maskottchen „Pingo“ (SVG)
