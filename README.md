@@ -47,8 +47,23 @@ node android/build.mjs        # oder: npm run apk
 * Die App enthält die komplette Web-App und funktioniert offline. Vorlesen und Spracherkennung laufen über die
   Android-Dienste (Google-Sprachausgabe bzw. Google-Spracherkennung).
 * Rangliste/Sync: in der App unter *Profil → Server für Rangliste* die Adresse des Servers eintragen, z. B. `192.168.1.10:8080`.
-* Signiert wird mit `android/lingopingo.keystore` (wird beim ersten Build erzeugt, nicht im Git). Für Updates immer denselben
-  Schlüssel verwenden, sonst muss die App vorher deinstalliert werden. Passwort über `LINGOPINGO_KS_PASS` änderbar.
+* Signiert wird mit `android/lingopingo.keystore` (wird beim ersten Build erzeugt, nicht im Git). Das Passwort steht in
+  `android/keystore.pass` (ebenfalls nicht im Git) oder in der Umgebungsvariable `LINGOPINGO_KS_PASS`. Für Updates immer
+  denselben Schlüssel verwenden, sonst muss die App vorher deinstalliert werden.
+
+### Automatische Releases (GitHub Actions)
+
+Der Workflow `.github/workflows/android-release.yml` baut die APK auf GitHub und veröffentlicht sie unter **Releases**:
+
+* Wird auf `main` die Version in `package.json` erhöht (z. B. `1.2.0` → `1.3.0`), entsteht automatisch das Release `v1.3.0`
+  mit `LingoPingo.apk`.
+* Manuell starten (*Actions → Android APK release → Run workflow*) baut die APK der aktuellen Version neu.
+* Einmalig nötig sind zwei Repository-Secrets mit dem Signaturschlüssel:
+  ```bash
+  base64 -w0 android/lingopingo.keystore | gh secret set ANDROID_KEYSTORE_B64
+  gh secret set LINGOPINGO_KS_PASS < android/keystore.pass
+  ```
+* Neueste APK direkt: `https://github.com/<user>/lingopingo/releases/latest/download/LingoPingo.apk`
 
 ## Hinweise zu Sprache/Audio
 

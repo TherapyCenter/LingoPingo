@@ -31,7 +31,11 @@ const versionCode = String(Math.floor((Date.now() - Date.UTC(2026, 0, 1)) / 6000
 const B = path.join(here, 'build');
 const DIST = path.join(here, 'dist');
 const KEYSTORE = path.join(here, 'lingopingo.keystore');
-const KS_PASS = process.env.LINGOPINGO_KS_PASS || 'lingopingo';
+// Keystore password: env (CI secret) > android/keystore.pass (local, not in git)
+const KS_PASS_FILE = path.join(here, 'keystore.pass');
+const KS_PASS = process.env.LINGOPINGO_KS_PASS ||
+  (fs.existsSync(KS_PASS_FILE) ? fs.readFileSync(KS_PASS_FILE, 'utf8').trim() : 'lingopingo');
+if (process.env.CI && !fs.existsSync(KEYSTORE)) fail('No signing key in CI (secret ANDROID_KEYSTORE_B64 missing).');
 
 function run(cmd, args, opts = {}) {
   console.log('>', path.basename(cmd), args.filter((a) => !String(a).startsWith('pass:')).join(' ').slice(0, 160));

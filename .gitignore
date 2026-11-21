@@ -4,3 +4,4 @@ android/build/
 android/dist/
 android/*.keystore
 public/download/
+android/keystore.pass
