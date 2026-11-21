@@ -1,0 +1,6 @@
+public/
+build/
+*.xcodeproj/
+Payload/
+*.ipa
+Sources/Info.plist

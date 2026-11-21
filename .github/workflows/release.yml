@@ -1,4 +1,5 @@
-# Builds the Android APK and the Windows installer and publishes both as a GitHub release.
+# Builds the Android APK, the Windows installer and the iOS app, publishes them as a GitHub
+# release and deploys the web app (for iPhone and browsers) to GitHub Pages.
 # A new release is created automatically whenever the version in package.json changes
 # on main (e.g. 1.3.0 -> 1.4.0 creates "v1.4.0"). Running the workflow manually rebuilds
 # the current version and replaces the files in its release.
@@ -97,6 +98,7 @@ jobs:
               --generate-notes \
               --notes "**Android:** download \`LingoPingo.apk\`, open it on your phone and allow installing from unknown sources.
           **Windows:** download \`LingoPingo-Setup-${{ needs.prepare.outputs.version }}.exe\` and run it. The app checks for updates on its own.
+          **iPhone:** open https://therapycenter.github.io/LingoPingo/ in Safari and tap Share → Add to Home Screen (updates automatically). Alternatively sideload \`LingoPingo-unsigned.ipa\` with AltStore or Sideloadly.
           Updates install over the previous version, your progress is kept."
           fi
       - name: Remove signing key
@@ -136,3 +138,63 @@ jobs:
             "dist/LingoPingo-Setup-$VERSION.exe" \
             "dist/LingoPingo-Setup-$VERSION.exe.blockmap" \
             dist/latest.yml --clobber
+
+  ios:
+    needs: [prepare, android]
+    if: needs.prepare.outputs.build == 'true'
+    runs-on: macos-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: ${{ needs.prepare.outputs.tag }}
+      VERSION: ${{ needs.prepare.outputs.version }}
+    defaults:
+      run:
+        working-directory: ios
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Bundle web app
+        run: |
+          rm -rf public
+          cp -R ../public public
+          rm -rf public/download
+      - name: Generate Xcode project
+        run: xcodegen generate
+      - name: Build (unsigned)
+        run: |
+          xcodebuild -project LingoPingo.xcodeproj -target LingoPingo -configuration Release -sdk iphoneos \
+            MARKETING_VERSION="$VERSION" CURRENT_PROJECT_VERSION="$GITHUB_RUN_NUMBER" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build | tail -n 30
+      - name: Package IPA
+        run: |
+          rm -rf Payload && mkdir Payload
+          cp -R build/Release-iphoneos/LingoPingo.app Payload/
+          zip -qry LingoPingo-unsigned.ipa Payload
+          cp LingoPingo-unsigned.ipa "LingoPingo-$TAG-unsigned.ipa"
+          ls -la *.ipa
+      - name: Upload IPA to release
+        run: gh release upload "$TAG" LingoPingo-unsigned.ipa "LingoPingo-$TAG-unsigned.ipa" --clobber
+
+  # Web app for iPhone & browsers on GitHub Pages (Safari: Share -> Add to Home Screen)
+  pages:
+    needs: [prepare, android]
+    if: needs.prepare.outputs.build == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Prepare site
+        run: rm -rf public/download
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+      - id: deploy
+        uses: actions/deploy-pages@v4

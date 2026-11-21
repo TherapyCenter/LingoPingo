@@ -4,13 +4,14 @@
 
 A playful, Duolingo-style language learning app in **9 languages**: German, English, Spanish, French, Italian, Croatian, Turkish, Chinese and Japanese.
 Each of them can be your own language (interface + exercises) or the language you learn – 72 language pairs.
-Mobile-first, runs in the browser, in Docker, as an **Android app** and as a **Windows app**. No external dependencies.
+Mobile-first, runs in the browser, in Docker, as an **Android app**, an **iPhone app** and a **Windows app**. No external dependencies.
 
 ## Download
 
 | Platform | How |
 |---|---|
 | 📱 **Android** | [LingoPingo.apk](https://github.com/TherapyCenter/LingoPingo/releases/latest/download/LingoPingo.apk) – open it on your phone and allow installing from unknown sources |
+| 🍎 **iPhone / iPad** | Open **https://therapycenter.github.io/LingoPingo/** in Safari → *Share* → *Add to Home Screen*. Starts like an app, works offline and updates itself. Alternatively sideload `LingoPingo-unsigned.ipa` from the release with AltStore or Sideloadly (see below) |
 | 🪟 **Windows** | `LingoPingo-Setup-x.y.z.exe` from the [latest release](https://github.com/TherapyCenter/LingoPingo/releases/latest) – the app checks for updates and offers to install them |
 | 🌐 **Browser / server** | `docker compose up -d --build`, see below |
 
@@ -75,12 +76,28 @@ npm run dist       # build the installer -> desktop/dist/LingoPingo-Setup-x.y.z.
 * **Updates:** on start (and every 4 hours) the app checks the GitHub releases. If there is a newer version it asks whether to
   download it and then offers to restart and install it. Progress is kept.
 
+## iPhone app
+
+**Web app (recommended):** the web app is deployed to GitHub Pages with every release. In Safari: *Share → Add to Home Screen*.
+It then runs full-screen like an app, works offline (service worker) and loads new versions automatically. Read-aloud and speech
+recognition work in Safari. Progress is stored on the device.
+
+**Native app (`ios/`):** a Swift/WKWebView app with the web app bundled inside. The Xcode project is generated with
+[XcodeGen](https://github.com/yonaskolb/XcodeGen) (`cd ios && cp -R ../public public && xcodegen generate`). The release workflow builds it on
+a macOS runner and attaches `LingoPingo-unsigned.ipa` to every release.
+
+* Apple only allows installing apps via the App Store/TestFlight (paid Apple Developer account) or by sideloading.
+  The IPA is unsigned: install it with [AltStore](https://altstore.io) or [Sideloadly](https://sideloadly.io), which sign it with your Apple ID.
+  With a free Apple ID the app has to be re-signed every 7 days.
+* Speech recognition is not available in the native app (read-aloud is), so speaking exercises are skipped there.
+
 ## Automatic releases (GitHub Actions)
 
-The workflow `.github/workflows/release.yml` builds both apps and publishes them under **Releases**:
+The workflow `.github/workflows/release.yml` builds all apps, publishes them under **Releases** and deploys the web app to GitHub Pages:
 
 * Raising the version in `package.json` on `main` (e.g. `1.3.0` → `1.4.0`) automatically creates the release `v1.4.0`
-  with `LingoPingo.apk` and `LingoPingo-Setup-1.4.0.exe` (plus `latest.yml` for the Windows updater).
+  with `LingoPingo.apk`, `LingoPingo-Setup-1.4.0.exe` (plus `latest.yml` for the Windows updater) and `LingoPingo-unsigned.ipa`,
+  and updates the web app on https://therapycenter.github.io/LingoPingo/.
 * A manual run (*Actions → Release → Run workflow*) rebuilds the current version and replaces its files.
 * Two repository secrets with the Android signing key are needed once:
   ```bash
@@ -120,5 +137,7 @@ public/js/audio.js     Sound effects, read-aloud, speech recognition (incl. Andr
 public/js/mascot.js    Mascot "Pingo" (SVG)
 android/               Android app (WebView + native speech), build script build.mjs
 desktop/               Windows app (Electron + auto-update)
+ios/                   iPhone app (Swift + WKWebView, XcodeGen project)
+public/sw.js           Service worker (offline web app)
 .github/workflows/     Automatic releases
 ```

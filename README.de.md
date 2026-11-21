@@ -4,13 +4,14 @@
 
 Verspielte Sprachlern-App im Duolingo-Stil in **9 Sprachen**: Deutsch, Englisch, Spanisch, Französisch, Italienisch, Kroatisch, Türkisch, Chinesisch und Japanisch.
 Jede davon kann die eigene Sprache (Oberfläche + Aufgaben) oder die Lernsprache sein – 72 Sprachkombinationen.
-Mobile-first, läuft im Browser, in Docker, als **Android-App** und als **Windows-App**. Keine externen Abhängigkeiten.
+Mobile-first, läuft im Browser, in Docker, als **Android-App**, **iPhone-App** und **Windows-App**. Keine externen Abhängigkeiten.
 
 ## Download
 
 | Plattform | So geht's |
 |---|---|
 | 📱 **Android** | [LingoPingo.apk](https://github.com/TherapyCenter/LingoPingo/releases/latest/download/LingoPingo.apk) – auf dem Handy öffnen und die Installation aus unbekannten Quellen erlauben |
+| 🍎 **iPhone / iPad** | **https://therapycenter.github.io/LingoPingo/** in Safari öffnen → *Teilen* → *Zum Home-Bildschirm*. Startet wie eine App, funktioniert offline und aktualisiert sich selbst. Alternativ `LingoPingo-unsigned.ipa` aus dem Release per AltStore oder Sideloadly installieren (siehe unten) |
 | 🪟 **Windows** | `LingoPingo-Setup-x.y.z.exe` aus dem [neuesten Release](https://github.com/TherapyCenter/LingoPingo/releases/latest) – die App sucht selbst nach Updates und bietet sie zur Installation an |
 | 🌐 **Browser / Server** | `docker compose up -d --build`, siehe unten |
 
@@ -75,12 +76,28 @@ npm run dist       # Installer bauen -> desktop/dist/LingoPingo-Setup-x.y.z.exe
 * **Updates:** Beim Start (und alle 4 Stunden) prüft die App die GitHub-Releases. Gibt es eine neue Version, fragt sie, ob sie
   heruntergeladen werden soll, und bietet danach Neustart und Installation an. Der Fortschritt bleibt erhalten.
 
+## iPhone-App
+
+**Web-App (empfohlen):** Die Web-App wird mit jedem Release auf GitHub Pages veröffentlicht. In Safari: *Teilen → Zum Home-Bildschirm*.
+Danach läuft sie im Vollbild wie eine App, funktioniert offline (Service Worker) und lädt neue Versionen automatisch. Vorlesen und
+Spracherkennung funktionieren in Safari. Der Fortschritt wird auf dem Gerät gespeichert.
+
+**Native App (`ios/`):** Swift-App mit WKWebView, die Web-App steckt in der App. Das Xcode-Projekt wird mit
+[XcodeGen](https://github.com/yonaskolb/XcodeGen) erzeugt (`cd ios && cp -R ../public public && xcodegen generate`). Der Release-Workflow baut es
+auf einem macOS-Runner und hängt `LingoPingo-unsigned.ipa` an jedes Release.
+
+* Apple erlaubt Installationen nur über App Store/TestFlight (kostenpflichtiger Apple-Developer-Account) oder per Sideloading.
+  Die IPA ist unsigniert: mit [AltStore](https://altstore.io) oder [Sideloadly](https://sideloadly.io) installieren, die sie mit deiner Apple-ID signieren.
+  Mit einer kostenlosen Apple-ID muss die App alle 7 Tage neu signiert werden.
+* Spracherkennung gibt es in der nativen App nicht (Vorlesen schon), Sprechaufgaben werden dort übersprungen.
+
 ## Automatische Releases (GitHub Actions)
 
-Der Workflow `.github/workflows/release.yml` baut beide Apps und veröffentlicht sie unter **Releases**:
+Der Workflow `.github/workflows/release.yml` baut alle Apps, veröffentlicht sie unter **Releases** und aktualisiert die Web-App auf GitHub Pages:
 
 * Wird auf `main` die Version in `package.json` erhöht (z. B. `1.3.0` → `1.4.0`), entsteht automatisch das Release `v1.4.0`
-  mit `LingoPingo.apk` und `LingoPingo-Setup-1.4.0.exe` (plus `latest.yml` für die Windows-Updates).
+  mit `LingoPingo.apk`, `LingoPingo-Setup-1.4.0.exe` (plus `latest.yml` für die Windows-Updates) und `LingoPingo-unsigned.ipa`,
+  und die Web-App auf https://therapycenter.github.io/LingoPingo/ wird aktualisiert.
 * Manuell starten (*Actions → Release → Run workflow*) baut die aktuelle Version neu und ersetzt die Dateien.
 * Einmalig nötig sind zwei Repository-Secrets mit dem Android-Signaturschlüssel:
   ```bash
@@ -120,5 +137,7 @@ public/js/audio.js     Soundeffekte, Vorlesen, Spracherkennung (inkl. Android-Br
 public/js/mascot.js    Maskottchen „Pingo“ (SVG)
 android/               Android-App (WebView + native Sprachausgabe/-erkennung), Build-Skript build.mjs
 desktop/               Windows-App (Electron + automatische Updates)
+ios/                   iPhone-App (Swift + WKWebView, XcodeGen-Projekt)
+public/sw.js           Service Worker (Web-App offline)
 .github/workflows/     Automatische Releases
 ```

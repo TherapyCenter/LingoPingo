@@ -1,6 +1,6 @@
 import { LANGS, UNITS, LESSONS_PER_UNIT, main, itemsOfUnit, flag, disp, reading } from './course.js';
 import * as store from './store.js';
-import { sfx, speak, listen, setSoundEnabled, setSpeechRate, ttsSupported, recognitionSupported, hasVoice, voiceName, ensureVoices, stopSpeaking, isAndroidApp, isDesktopApp } from './audio.js';
+import { sfx, speak, listen, setSoundEnabled, setSpeechRate, ttsSupported, recognitionSupported, hasVoice, voiceName, ensureVoices, stopSpeaking, isAndroidApp, isDesktopApp, isIOSApp } from './audio.js';
 import { buildSession, makeExercise, checkText, similarity, tokens, shuffle, norm, pauseSpeaking, highestUnit } from './lesson.js';
 import { t, langName, langInText, leagueName, achText, unitTitle, unitTip, praise, setUiLang, initialUiLang, uiLang, locale, UI_LANGS } from './i18n.js';
 import { mascot } from './mascot.js';
@@ -73,7 +73,7 @@ async function renderProfiles() {
     <span class="pn">${esc(p.name)}</span><span class="pl">Lv ${p.level || 1} · 🔥${p.streak || 0}</span></button>`).join('')
     : `<p class="muted">${t('noProfiles')}</p>`;
   $$('.profile-chip').forEach((b) => b.onclick = () => login(b.dataset.name));
-  if (!store.serverOnline) toast(t('serverOffline'));
+  if (!store.serverOnline && expectServer()) toast(t('serverOffline'));
 }
 
 function newProfileDialog(state = {}) {
@@ -334,7 +334,7 @@ function profileTab() {
       <label class="range"><span>${t('goal')}</span><select data-goal>${[10, 20, 30, 50, 80].map((g, i) => `<option value="${g}" ${P.dailyGoal === g ? 'selected' : ''}>${g} XP (${t('goal' + i)})</option>`).join('')}</select></label>
       ${!recognitionSupported() ? `<p class="muted small">${t('speakNeeds')}</p>` : ''}
     </div>
-    ${isAndroidApp || isDesktopApp || store.serverUrl() ? `<div class="card"><h3>${t('serverTitle')}</h3>
+    ${isAndroidApp || isDesktopApp || isIOSApp || store.serverUrl() ? `<div class="card"><h3>${t('serverTitle')}</h3>
       <p class="muted small">${t('serverInfo')}</p>
       <div class="server-row"><input class="input" id="srv" placeholder="${esc(t('serverPh'))}" value="${esc(store.serverUrl())}" autocapitalize="off" spellcheck="false"><button class="btn small" id="srvsave">${t('save')}</button></div></div>` : ''}
     <div class="card voices"><h3>${t('testVoices')}</h3>
@@ -956,8 +956,18 @@ document.addEventListener('keydown', (e) => {
 setInterval(() => { if (P && !S) { const before = P.hearts; store.refreshHearts(P); if (P.hearts !== before) { store.save(P); const h = $('.chip.hearts b'); if (h) h.textContent = P.hearts; } } }, 30000);
 
 // ---------- Start ----------
+// Only warn about a missing server where one is expected (not in the apps or on GitHub Pages)
+function expectServer() {
+  if (store.serverUrl()) return true;
+  return !isAndroidApp && /^https?:$/.test(location.protocol) && !location.hostname.endsWith('github.io');
+}
+
 (async function boot() {
   setUiLang(initialUiLang());
+  // offline support for the web app (e.g. iPhone home screen); the native apps bring their own files
+  if ('serviceWorker' in navigator && location.protocol === 'https:' && !isAndroidApp && !isDesktopApp && !isIOSApp) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
   const last = store.lastProfileName();
   if (last) {
     const p = await store.loadProfile(last);

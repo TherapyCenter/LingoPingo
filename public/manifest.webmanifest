@@ -1,11 +1,16 @@
 {
-  "name": "LingoPingo – Sprachen spielend lernen",
+  "name": "LingoPingo",
   "short_name": "LingoPingo",
-  "start_url": "/",
+  "description": "Playful language learning in 9 languages",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#ffffff",
   "theme_color": "#58cc02",
-  "lang": "de",
-  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-180.png", "sizes": "180x180", "type": "image/png" }
+  ]
 }
