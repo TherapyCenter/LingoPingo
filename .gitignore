@@ -1,2 +1,6 @@
 data/
 node_modules/
+android/build/
+android/dist/
+android/*.keystore
+public/download/

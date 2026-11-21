@@ -23,6 +23,7 @@ const MIME = {
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
   '.ico': 'image/x-icon',
+  '.apk': 'application/vnd.android.package-archive',
 };
 
 // ---------- Profil-Speicher ----------
@@ -68,7 +69,18 @@ function readBody(req, limit = 512 * 1024) {
   });
 }
 
+// CORS: the Android app (origin https://appassets.androidplatform.net) talks to this server
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Private-Network': 'true',
+  'Access-Control-Max-Age': '86400',
+};
+
 async function api(req, res, url) {
+  for (const [k, v] of Object.entries(CORS)) res.setHeader(k, v);
+  if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
   const parts = url.pathname.split('/').filter(Boolean); // ['api', 'profiles', name?]
   if (parts[1] !== 'profiles') return send(res, 404, { error: 'not found' });
 

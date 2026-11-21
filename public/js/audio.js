@@ -1,5 +1,5 @@
 // Soundeffekte (synthetisiert), Vorlesen (TTS) und Spracherkennung.
-import { LANGS } from './course.js';
+import { LANGS, joinCjk } from './course.js';
 
 let ctx = null;
 let enabled = true;
@@ -69,7 +69,28 @@ if (window.speechSynthesis) {
   loadVoices();
   window.speechSynthesis.onvoiceschanged = loadVoices;
 }
-export const ttsSupported = () => !!window.speechSynthesis;
+// Android app: native TextToSpeech/SpeechRecognizer via the WebView bridge
+// (Android WebView has no Web Speech API).
+const AB = window.LingoAndroid || null;
+export const isAndroidApp = !!AB;
+const tagOf = (lang) => LANGS[lang]?.tts || lang;
+const abCalls = {};
+let abSeq = 0;
+window.__lpBridge = (id, kind, data) => { const c = abCalls[id]; if (c) { delete abCalls[id]; c(kind, data); } };
+function abCall(start, timeout) {
+  return new Promise((resolve) => {
+    const id = 'c' + (++abSeq);
+    abCalls[id] = (kind, data) => resolve({ kind, data });
+    if (timeout) setTimeout(() => window.__lpBridge(id, 'timeout'), timeout);
+    start(id);
+  });
+}
+
+export const ttsSupported = () => !!AB || !!window.speechSynthesis;
+export function stopSpeaking() {
+  if (AB) { try { AB.stop(); } catch { /* ignore */ } return; }
+  window.speechSynthesis?.cancel();
+}
 
 export function voiceFor(lang) {
   const tag = (LANGS[lang]?.tts || lang).toLowerCase();
@@ -80,8 +101,14 @@ export function voiceFor(lang) {
     (/natural|online|google|premium|enhanced/i.test(v.name) ? 1 : 0);
   return list.sort((a, b) => score(b) - score(a))[0] || null;
 }
-export const hasVoice = (lang) => { if (!voices.length) loadVoices(); return !!voiceFor(lang); };
-export const voiceName = (lang) => { if (!voices.length) loadVoices(); return voiceFor(lang)?.name || null; };
+export const hasVoice = (lang) => {
+  if (AB) return AB.hasLang(tagOf(lang));
+  if (!voices.length) loadVoices(); return !!voiceFor(lang);
+};
+export const voiceName = (lang) => {
+  if (AB) return AB.hasLang(tagOf(lang)) ? `Android-Stimme (${tagOf(lang)})` : null;
+  if (!voices.length) loadVoices(); return voiceFor(lang)?.name || null;
+};
 
 let speechRate = 0.95;
 export const setSpeechRate = (r) => { speechRate = r; };
@@ -113,7 +140,7 @@ let currentUtterance = null; // Referenz halten, sonst bricht Chrome/Android man
 // Android die Sprache und liest mit der Standardstimme (meist Deutsch) vor.
 let voicesReady = null;
 export function ensureVoices() {
-  if (!window.speechSynthesis) return Promise.resolve();
+  if (AB || !window.speechSynthesis) return Promise.resolve();
   loadVoices();
   if (voices.length) return Promise.resolve();
   if (!voicesReady) {
@@ -131,7 +158,13 @@ export function ensureVoices() {
 }
 
 export async function speak(text, lang, opts = {}) {
-  if (!window.speechSynthesis || !text) return;
+  if (!text) return;
+  if (AB) {
+    const t = LANGS[lang]?.cjk ? joinCjk(text) : text;
+    await abCall((id) => AB.speak(t, tagOf(lang), opts.slow ? 0.6 : speechRate, id), 10000);
+    return;
+  }
+  if (!window.speechSynthesis) return;
   if (!voices.length) await ensureVoices();
   return speakNow(text, lang, opts);
 }
@@ -141,7 +174,7 @@ function speakNow(text, lang, { slow = false } = {}) {
   return new Promise((resolve) => {
     let done = false;
     const finish = () => { if (!done) { done = true; resolve(); } };
-    const u = new SpeechSynthesisUtterance(text);
+    const u = new SpeechSynthesisUtterance(LANGS[lang]?.cjk ? joinCjk(text) : text);
     u.lang = LANGS[lang]?.tts || lang;
     const v = voiceFor(lang);
     if (v) u.voice = v;
@@ -157,9 +190,17 @@ function speakNow(text, lang, { slow = false } = {}) {
 
 // ---------- Spracherkennung ----------
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-export const recognitionSupported = () => !!SR && window.isSecureContext;
+export const recognitionSupported = () => (AB ? AB.sttAvailable() : !!SR && window.isSecureContext);
 
 export function listen(lang, { onStart } = {}) {
+  if (AB) {
+    listen.stop = () => { try { AB.stopListening(); } catch { /* ignore */ } };
+    return abCall((id) => { AB.listen(tagOf(lang), id); onStart && onStart(); }, 20000).then(({ kind, data }) => {
+      if (kind === 'result') return JSON.parse(data || '[]');
+      if (kind === 'error') throw new Error(data || 'error');
+      return [];
+    });
+  }
   return new Promise((resolve, reject) => {
     if (!recognitionSupported()) return reject(new Error('unsupported'));
     const r = new SR();

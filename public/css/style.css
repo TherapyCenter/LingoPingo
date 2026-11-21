@@ -357,3 +357,9 @@ h1, h2, h3 { margin: .3em 0; font-weight: 800; }
 .voice-row > div { flex: 1; display: flex; flex-direction: column; min-width: 0; }
 .voice-row small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .voice-row small.warn { color: #e07a00; white-space: normal; }
+
+/* Pinyin reading aid under Chinese text */
+.py { display: block; font-size: .68em; font-weight: 600; opacity: .65; letter-spacing: .02em; line-height: 1.2; margin-top: 2px; }
+.choice .py, .mt .py { display: inline; margin: 0 0 0 .45em; }
+.server-row { display: flex; gap: 8px; align-items: center; }
+.server-row .input { flex: 1; min-width: 0; }

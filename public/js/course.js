@@ -1,11 +1,19 @@
-// Kursinhalte. Eine neue Sprache = neuer Eintrag in LANGS + ein weiterer Schlüssel
-// (z. B. "it") bei jedem Wort/Satz. Mehrere akzeptierte Antworten mit "|" trennen –
-// die erste wird angezeigt.
+// Kursinhalte. Spanisch, Englisch und Kroatisch stehen direkt bei den Wörtern,
+// weitere Sprachen kommen aus lang/xx.js. Mehrere akzeptierte Antworten mit "|"
+// trennen – die erste wird angezeigt.
+import IT from './lang/it.js';
+import FR from './lang/fr.js';
+import TR from './lang/tr.js';
+import ZH from './lang/zh.js';
 
 export const LANGS = {
   es: { name: 'Spanisch', native: 'Español', flag: '🇪🇸', tts: 'es-ES', accents: 'áéíóúñü¿¡' },
   en: { name: 'Englisch', native: 'English', flag: '🇬🇧', tts: 'en-GB', accents: '' },
   hr: { name: 'Kroatisch', native: 'Hrvatski', flag: '🇭🇷', tts: 'hr-HR', accents: 'čćšžđ' },
+  it: { name: 'Italienisch', native: 'Italiano', flag: '🇮🇹', tts: 'it-IT', accents: 'àèéìòù' },
+  fr: { name: 'Französisch', native: 'Français', flag: '🇫🇷', tts: 'fr-FR', accents: 'àâçéèêëîïôùûœ' },
+  tr: { name: 'Türkisch', native: 'Türkçe', flag: '🇹🇷', tts: 'tr-TR', accents: 'çğıİöşü' },
+  zh: { name: 'Chinesisch', native: '中文', flag: '🇨🇳', tts: 'zh-CN', accents: '', cjk: true },
 };
 
 export const UNITS = [
@@ -429,13 +437,153 @@ export const UNITS = [
       { de: 'Nimm zweimal am Tag eine Tablette.', es: 'Toma una pastilla dos veces al día.', en: 'Take one pill twice a day.|Take a pill twice a day.|Take one tablet twice a day.', hr: 'Uzimaj jednu tabletu dvaput dnevno.|Uzmi jednu tabletu dva puta dnevno.|Uzimaj tabletu dva puta dnevno.' },
     ],
   },
+  {
+    id: 'time', title: 'Tagesablauf', icon: '⏰', color: '#ff9600',
+    tip: 'Uhrzeiten sagt man fast überall mit „um … Uhr“ – auf Spanisch „a las siete“, auf Kroatisch „u sedam“.',
+    words: [
+      { e: '⏰', de: 'Uhr', es: 'reloj', en: 'clock|watch', hr: 'sat' },
+      { e: '⏱️', de: 'Minute', es: 'minuto', en: 'minute', hr: 'minuta' },
+      { e: '🥐', de: 'Frühstück', es: 'desayuno', en: 'breakfast', hr: 'doručak' },
+      { e: '🥪', de: 'Mittagessen', es: 'almuerzo|comida', en: 'lunch', hr: 'ručak' },
+      { e: '🍛', de: 'Abendessen', es: 'cena', en: 'dinner|supper', hr: 'večera' },
+      { e: '🌆', de: 'Abend', es: 'tarde|noche', en: 'evening', hr: 'večer' },
+      { e: '🕛', de: 'Mittag', es: 'mediodía', en: 'noon|midday', hr: 'podne' },
+      { e: '🌄', de: 'aufwachen', es: 'despertarse|despertar', en: 'wake up|to wake up', hr: 'probuditi se|buditi se' },
+    ],
+    sentences: [
+      { de: 'Wie spät ist es?', es: '¿Qué hora es?', en: 'What time is it?', hr: 'Koliko je sati?' },
+      { de: 'Ich stehe um sieben Uhr auf.', es: 'Me levanto a las siete.', en: "I get up at seven o'clock.|I get up at seven.", hr: 'Ustajem u sedam sati.|Ustajem u sedam.' },
+      { de: 'Das Frühstück ist fertig.', es: 'El desayuno está listo.', en: 'Breakfast is ready.|The breakfast is ready.', hr: 'Doručak je gotov.' },
+      { de: 'Wir essen um acht Uhr zu Abend.', es: 'Cenamos a las ocho.', en: "We have dinner at eight o'clock.|We have dinner at eight.|We eat dinner at eight.", hr: 'Večeramo u osam sati.|Večeramo u osam.' },
+    ],
+  },
+  {
+    id: 'city', title: 'In der Stadt', icon: '🏙️', color: '#1cb0f6',
+    tip: 'Nach dem Weg fragen klappt immer: „Wie komme ich zu …?“ – und dann gut auf „links“ und „rechts“ hören.',
+    words: [
+      { e: '🚉', de: 'Bahnhof', es: 'estación', en: 'station|train station', hr: 'kolodvor|stanica' },
+      { e: '🏦', de: 'Bank', es: 'banco', en: 'bank', hr: 'banka' },
+      { e: '⛪', de: 'Kirche', es: 'iglesia', en: 'church', hr: 'crkva' },
+      { e: '🏛️', de: 'Museum', es: 'museo', en: 'museum', hr: 'muzej' },
+      { e: '🌉', de: 'Brücke', es: 'puente', en: 'bridge', hr: 'most' },
+      { e: '⛲', de: 'Park', es: 'parque', en: 'park', hr: 'park' },
+      { e: '🚌', de: 'Bus', es: 'autobús|bus', en: 'bus', hr: 'autobus' },
+      { e: '🚦', de: 'Ampel', es: 'semáforo', en: 'traffic light|traffic lights', hr: 'semafor' },
+    ],
+    sentences: [
+      { de: 'Wie komme ich zum Bahnhof?', es: '¿Cómo llego a la estación?', en: 'How do I get to the station?|How do I get to the train station?', hr: 'Kako da dođem do kolodvora?|Kako doći do kolodvora?' },
+      { de: 'Geh geradeaus und dann links.', es: 'Ve todo recto y luego a la izquierda.|Sigue recto y luego a la izquierda.', en: 'Go straight ahead and then left.|Go straight on and then left.|Go straight and then left.', hr: 'Idi ravno pa lijevo.|Idi ravno i onda lijevo.' },
+      { de: 'Der Bus kommt in fünf Minuten.', es: 'El autobús llega en cinco minutos.', en: 'The bus is coming in five minutes.|The bus comes in five minutes.', hr: 'Autobus dolazi za pet minuta.' },
+      { de: 'Das Museum ist neben der Kirche.', es: 'El museo está al lado de la iglesia.', en: 'The museum is next to the church.', hr: 'Muzej je pokraj crkve.|Muzej je kraj crkve.' },
+    ],
+  },
+  {
+    id: 'school', title: 'Schule', icon: '🎒', color: '#58cc02',
+    tip: 'Lernen hört nie auf – und mit diesen Wörtern kannst du sogar darüber reden.',
+    words: [
+      { e: '🏫', de: 'Schule', es: 'escuela|colegio', en: 'school', hr: 'škola' },
+      { e: '✏️', de: 'Bleistift', es: 'lápiz', en: 'pencil', hr: 'olovka' },
+      { e: '📓', de: 'Heft', es: 'cuaderno', en: 'notebook|exercise book', hr: 'bilježnica' },
+      { e: '🎒', de: 'Rucksack', es: 'mochila', en: 'backpack|rucksack|schoolbag', hr: 'ruksak' },
+      { e: '📝', de: 'Prüfung', es: 'examen', en: 'exam|test', hr: 'ispit' },
+      { e: '📄', de: 'Hausaufgaben', es: 'deberes|tarea', en: 'homework', hr: 'zadaća|domaća zadaća' },
+      { e: '🧠', de: 'lernen', es: 'aprender|estudiar', en: 'learn|to learn|study', hr: 'učiti' },
+      { e: '📏', de: 'Lineal', es: 'regla', en: 'ruler', hr: 'ravnalo' },
+    ],
+    sentences: [
+      { de: 'Ich gehe zur Schule.', es: 'Voy a la escuela.|Voy al colegio.', en: 'I go to school.|I am going to school.', hr: 'Idem u školu.' },
+      { de: 'Hast du deine Hausaufgaben gemacht?', es: '¿Has hecho los deberes?|¿Hiciste la tarea?', en: 'Did you do your homework?|Have you done your homework?', hr: 'Jesi li napravio zadaću?|Jesi li napisao zadaću?' },
+      { de: 'Morgen habe ich eine Prüfung.', es: 'Mañana tengo un examen.', en: 'I have an exam tomorrow.|Tomorrow I have an exam.|I have a test tomorrow.', hr: 'Sutra imam ispit.' },
+      { de: 'Kann ich deinen Bleistift leihen?', es: '¿Me prestas tu lápiz?|¿Puedo usar tu lápiz?', en: 'Can I borrow your pencil?', hr: 'Mogu li posuditi tvoju olovku?' },
+    ],
+  },
+  {
+    id: 'tech', title: 'Technik', icon: '📱', color: '#ce82ff',
+    tip: 'Viele Technik-Wörter sind international – aber nicht alle: Handy heißt auf Englisch „phone“!',
+    words: [
+      { e: '📱', de: 'Handy', es: 'móvil|teléfono', en: 'mobile phone|phone|cell phone|smartphone', hr: 'mobitel' },
+      { e: '💻', de: 'Computer', es: 'ordenador|computadora', en: 'computer|laptop', hr: 'računalo' },
+      { e: '📺', de: 'Fernseher', es: 'televisión|tele|televisor', en: 'television|TV', hr: 'televizor' },
+      { e: '📷', de: 'Kamera', es: 'cámara', en: 'camera', hr: 'fotoaparat|kamera' },
+      { e: '🔋', de: 'Batterie', es: 'batería', en: 'battery', hr: 'baterija' },
+      { e: '📧', de: 'E-Mail', es: 'correo electrónico|correo|email', en: 'email|e-mail', hr: 'e-mail|e-pošta|mail' },
+      { e: '🌐', de: 'Internet', es: 'internet', en: 'internet', hr: 'internet' },
+      { e: '🕹️', de: 'Videospiel', es: 'videojuego', en: 'video game|game', hr: 'videoigra|igrica' },
+    ],
+    sentences: [
+      { de: 'Mein Handy ist kaputt.', es: 'Mi móvil está roto.', en: 'My phone is broken.', hr: 'Mobitel mi je pokvaren.|Moj mobitel je pokvaren.' },
+      { de: 'Gibt es hier WLAN?', es: '¿Hay wifi aquí?', en: 'Is there wifi here?|Is there Wi-Fi here?', hr: 'Ima li ovdje wifi?|Ima li ovdje Wi-Fi?' },
+      { de: 'Der Akku ist fast leer.', es: 'La batería está casi vacía.', en: 'The battery is almost empty.|The battery is almost dead.', hr: 'Baterija je skoro prazna.|Baterija je gotovo prazna.' },
+      { de: 'Ich schicke dir eine E-Mail.', es: 'Te envío un correo electrónico.|Te mando un correo.', en: 'I will send you an email.|I am sending you an email.|I send you an email.', hr: 'Poslat ću ti e-mail.|Šaljem ti e-mail.' },
+    ],
+  },
+  {
+    id: 'sports', title: 'Sport', icon: '⚽', color: '#ff4b4b',
+    tip: 'Achtung: Was in Europa „football“ heißt, nennen Amerikaner „soccer“.',
+    words: [
+      { e: '⚽', de: 'Fußball', es: 'fútbol', en: 'football|soccer', hr: 'nogomet' },
+      { e: '🏀', de: 'Basketball', es: 'baloncesto|básquet', en: 'basketball', hr: 'košarka' },
+      { e: '🎾', de: 'Tennis', es: 'tenis', en: 'tennis', hr: 'tenis' },
+      { e: '🏃', de: 'laufen', es: 'correr', en: 'run|to run', hr: 'trčati' },
+      { e: '👥', de: 'Mannschaft', es: 'equipo', en: 'team', hr: 'momčad|ekipa' },
+      { e: '🏆', de: 'gewinnen', es: 'ganar', en: 'win|to win', hr: 'pobijediti' },
+      { e: '⛷️', de: 'Ski fahren', es: 'esquiar', en: 'ski|to ski', hr: 'skijati' },
+      { e: '🥅', de: 'Tor', es: 'gol|portería', en: 'goal', hr: 'gol' },
+    ],
+    sentences: [
+      { de: 'Wir haben gewonnen!', es: '¡Hemos ganado!|¡Ganamos!', en: 'We won!|We have won!', hr: 'Pobijedili smo!' },
+      { de: 'Ich laufe jeden Morgen.', es: 'Corro todas las mañanas.|Corro cada mañana.', en: 'I run every morning.|I go running every morning.', hr: 'Trčim svako jutro.' },
+      { de: 'Spielst du Tennis?', es: '¿Juegas al tenis?|¿Juegas tenis?', en: 'Do you play tennis?', hr: 'Igraš li tenis?' },
+      { de: 'Unsere Mannschaft hat ein Tor geschossen.', es: 'Nuestro equipo ha marcado un gol.|Nuestro equipo marcó un gol.', en: 'Our team scored a goal.|Our team has scored a goal.', hr: 'Naša momčad je zabila gol.|Naša ekipa je zabila gol.' },
+    ],
+  },
+  {
+    id: 'party', title: 'Feiern', icon: '🎉', color: '#ffc800',
+    tip: 'Glückwünsche sind kurze, feste Formeln – lern sie einfach als Ganzes auswendig.',
+    words: [
+      { e: '🎂', de: 'Geburtstag', es: 'cumpleaños', en: 'birthday', hr: 'rođendan' },
+      { e: '🎁', de: 'Geschenk', es: 'regalo', en: 'present|gift', hr: 'poklon|dar' },
+      { e: '🍰', de: 'Kuchen', es: 'pastel|tarta', en: 'cake', hr: 'torta|kolač' },
+      { e: '🥳', de: 'Party', es: 'fiesta', en: 'party', hr: 'zabava|tulum' },
+      { e: '🕯️', de: 'Kerze', es: 'vela', en: 'candle', hr: 'svijeća' },
+      { e: '🎄', de: 'Weihnachten', es: 'Navidad', en: 'Christmas', hr: 'Božić' },
+      { e: '🎈', de: 'Luftballon', es: 'globo', en: 'balloon', hr: 'balon' },
+      { e: '🎊', de: 'feiern', es: 'celebrar|festejar', en: 'celebrate|to celebrate', hr: 'slaviti|proslaviti' },
+    ],
+    sentences: [
+      { de: 'Alles Gute zum Geburtstag!', es: '¡Feliz cumpleaños!', en: 'Happy birthday!', hr: 'Sretan rođendan!' },
+      { de: 'Frohe Weihnachten!', es: '¡Feliz Navidad!', en: 'Merry Christmas!', hr: 'Sretan Božić!' },
+      { de: 'Ich habe ein Geschenk für dich.', es: 'Tengo un regalo para ti.', en: 'I have a present for you.|I have a gift for you.', hr: 'Imam poklon za tebe.' },
+      { de: 'Kommst du am Samstag zu meiner Party?', es: '¿Vienes a mi fiesta el sábado?', en: 'Are you coming to my party on Saturday?|Will you come to my party on Saturday?', hr: 'Dolaziš li u subotu na moju zabavu?|Dolaziš li na moju zabavu u subotu?' },
+    ],
+  },
 ];
+
+// Merge the per-language packs (lang/xx.js) into the units
+const PACKS = { it: IT, fr: FR, tr: TR, zh: ZH };
+for (const [k, pack] of Object.entries(PACKS)) {
+  for (const u of UNITS) {
+    const p = pack[u.id];
+    if (!p) continue;
+    u.words.forEach((w, i) => { if (p[i]) w[k] = p[i]; });
+    u.sentences.forEach((s, i) => { if (p[8 + i]) s[k] = p[8 + i]; });
+  }
+}
 
 export const LESSONS_PER_UNIT = 5; // die 5. Lektion ist die Meisterprüfung (mit Timer)
 
 // Hilfsfunktionen
 export const main = (s) => (s || '').split('|')[0];
 export const alts = (s) => (s || '').split('|');
+
+// Chinese is stored with spaces between words (for the tiles); hide them for display.
+const CJK = '\\u2E80-\\u9FFF\\u3000-\\u303F\\uFF00-\\uFFEF';
+const CJK_GAP = new RegExp(`(?<=[${CJK}])\\s+(?=[${CJK}])`, 'g');
+export const HAS_CJK = new RegExp(`[${CJK}]`);
+export const joinCjk = (s) => (s || '').replace(CJK_GAP, '');
+export const disp = (s) => joinCjk(main(s));
+// Reading aid (pinyin): the first alternative without CJK characters
+export const reading = (s, lang) => (LANGS[lang]?.cjk ? alts(s).slice(1).find((a) => a && !HAS_CJK.test(a)) || '' : '');
 
 // Eindeutige Item-Keys für Wiederholung/Spaced Repetition
 export function itemsOfUnit(ui) {
@@ -451,5 +599,17 @@ const FLAGS = {
   es: '<rect width="30" height="20" fill="#c60b1e"/><rect y="5" width="30" height="10" fill="#ffc400"/>',
   en: '<rect width="30" height="20" fill="#012169"/><path d="M0 0L30 20M30 0L0 20" stroke="#fff" stroke-width="4"/><path d="M0 0L30 20M30 0L0 20" stroke="#c8102e" stroke-width="1.5"/><path d="M15 0V20M0 10H30" stroke="#fff" stroke-width="6"/><path d="M15 0V20M0 10H30" stroke="#c8102e" stroke-width="3.5"/>',
   hr: '<rect width="30" height="20" fill="#171796"/><rect width="30" height="13.3" fill="#fff"/><rect width="30" height="6.7" fill="#f00"/><path d="M12 5.5h6v6.5a3 3 0 0 1-6 0z" fill="#fff" stroke="#f00" stroke-width=".4"/><path d="M12 5.5h1.5v1.5H12zM15 5.5h1.5v1.5H15zM13.5 7h1.5v1.5h-1.5zM16.5 7H18v1.5h-1.5zM12 8.5h1.5V10H12zM15 8.5h1.5V10H15zM13.5 10h1.5v1.5h-1.5zM16.5 10H18v1.5h-1.5zM12 11.5h1.5V13H12zM15 11.5h1.5V13H15zM13.5 13h1.5v1.5h-1.5z" fill="#f00"/>',
+  it: '<rect width="30" height="20" fill="#fff"/><rect width="10" height="20" fill="#009246"/><rect x="20" width="10" height="20" fill="#ce2b37"/>',
+  fr: '<rect width="30" height="20" fill="#fff"/><rect width="10" height="20" fill="#0055a4"/><rect x="20" width="10" height="20" fill="#ef4135"/>',
+  tr: `<rect width="30" height="20" fill="#e30a17"/><circle cx="11" cy="10" r="5" fill="#fff"/><circle cx="12.3" cy="10" r="4" fill="#e30a17"/>${star(17.6, 10, 2.3, '#fff', 36)}`,
+  zh: `<rect width="30" height="20" fill="#ee1c25"/>${star(5, 5, 3, '#ffde00')}${star(10, 2, 1, '#ffde00')}${star(12, 4, 1, '#ffde00')}${star(12, 7, 1, '#ffde00')}${star(10, 9, 1, '#ffde00')}`,
 };
+function star(cx, cy, r, fill, rot = -90) {
+  const pts = [];
+  for (let i = 0; i < 10; i++) {
+    const a = ((rot + i * 36) * Math.PI) / 180, rr = i % 2 ? r * 0.382 : r;
+    pts.push(`${(cx + rr * Math.cos(a)).toFixed(2)},${(cy + rr * Math.sin(a)).toFixed(2)}`);
+  }
+  return `<polygon points="${pts.join(' ')}" fill="${fill}"/>`;
+}
 export const flag = (k, w = 30) => `<svg class="flag-svg" width="${w}" height="${Math.round(w * 2 / 3)}" viewBox="0 0 30 20" aria-label="${LANGS[k]?.name || k}"><clipPath id="fc-${k}-${w}"><rect width="30" height="20" rx="3"/></clipPath><g clip-path="url(#fc-${k}-${w})">${FLAGS[k] || '<rect width="30" height="20" fill="#ccc"/>'}</g></svg>`;

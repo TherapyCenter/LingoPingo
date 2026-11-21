@@ -165,10 +165,22 @@ function lsSave(p) {
 
 export let serverOnline = true;
 
+// Server for leaderboard/sync. Empty = same origin (web app). The Android app has no
+// server of its own, there it can be set in the profile settings (e.g. http://192.168.1.10:8080).
+const LS_SERVER = 'lingopingo-server';
+export const serverUrl = () => { try { return localStorage.getItem(LS_SERVER) || ''; } catch { return ''; } };
+export function setServerUrl(u) {
+  u = (u || '').trim().replace(/\/+$/, '');
+  if (u && !/^https?:\/\//.test(u)) u = 'http://' + u;
+  try { if (u) localStorage.setItem(LS_SERVER, u); else localStorage.removeItem(LS_SERVER); } catch { /* ignore */ }
+  return u;
+}
+const api = (path) => serverUrl() + '/api/profiles' + path;
+
 export async function listProfiles() {
   const local = Object.values(lsAll()).map((p) => ({ name: p.name, avatar: p.avatar, xp: p.xp, level: p.level, streak: p.streak, weekXp: p.weekXp, weekId: p.weekId, updatedAt: p.updatedAt || 0 }));
   try {
-    const r = await fetch('/api/profiles');
+    const r = await fetch(api(''));
     if (!r.ok) throw new Error();
     const remote = await r.json();
     serverOnline = true;
@@ -192,7 +204,7 @@ function migrate(p) {
 export async function loadProfile(name) {
   const local = lsAll()[name.toLowerCase()];
   try {
-    const r = await fetch('/api/profiles/' + encodeURIComponent(name));
+    const r = await fetch(api('/' + encodeURIComponent(name)));
     if (r.ok) {
       const remote = await r.json();
       // Neuere Version gewinnt
@@ -208,7 +220,7 @@ export function save(p, immediate = false) {
   lsSave(p);
   localStorage.setItem(LS_CURRENT, p.name);
   clearTimeout(syncTimer);
-  const push = () => fetch('/api/profiles/' + encodeURIComponent(p.name), {
+  const push = () => fetch(api('/' + encodeURIComponent(p.name)), {
     method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(p), keepalive: true,
   }).then(() => { serverOnline = true; }).catch(() => { serverOnline = false; });
   if (immediate) push(); else syncTimer = setTimeout(push, 800);
@@ -218,7 +230,7 @@ export async function deleteProfile(name) {
   const all = lsAll(); delete all[name.toLowerCase()];
   localStorage.setItem(LS_KEY, JSON.stringify(all));
   if (localStorage.getItem(LS_CURRENT) === name) localStorage.removeItem(LS_CURRENT);
-  try { await fetch('/api/profiles/' + encodeURIComponent(name), { method: 'DELETE' }); } catch { /* offline */ }
+  try { await fetch(api('/' + encodeURIComponent(name)), { method: 'DELETE' }); } catch { /* offline */ }
 }
 
 export const lastProfileName = () => localStorage.getItem(LS_CURRENT);

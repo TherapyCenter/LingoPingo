@@ -1,5 +1,5 @@
 // Erzeugt Lektionen passend zu Fortschritt & Können und prüft Antworten.
-import { UNITS, LANGS, LESSONS_PER_UNIT, main, alts, itemsOfUnit } from './course.js';
+import { UNITS, LANGS, LESSONS_PER_UNIT, main, alts, itemsOfUnit, joinCjk } from './course.js';
 import { itemState, unitProgress, isUnitUnlocked, skillBonus } from './store.js';
 import { recognitionSupported, ttsSupported } from './audio.js';
 
@@ -8,14 +8,17 @@ export const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i-
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
+const PUNCT = /[¿¡?!.,;:"„“”«»…()–—\-？！。，、；：“”（）]/g;
 export function norm(s) {
-  return (s || '').toLowerCase().normalize('NFC')
+  return joinCjk((s || '').toLowerCase().normalize('NFC')
+    .replace(/i̇/g, 'i') // Turkish "İ".toLowerCase()
     .replace(/[’`´]/g, "'")
-    .replace(/[¿¡?!.,;:"„“”«»…()–—-]/g, ' ')
-    .replace(/\s+/g, ' ').trim();
+    .replace(PUNCT, ' ')
+    .replace(/\s+/g, ' ').trim());
 }
 function strip(s) {
-  return norm(s).replace(/dj/g, 'đ').replace(/đ/g, 'd').normalize('NFD').replace(/[̀-ͯ]/g, '');
+  return norm(s).replace(/dj/g, 'đ').replace(/đ/g, 'd').replace(/ı/g, 'i').replace(/œ/g, 'oe')
+    .normalize('NFD').replace(/[̀-ͯ]/g, '');
 }
 function lev(a, b) {
   if (a === b) return 0;
@@ -31,11 +34,17 @@ function lev(a, b) {
 }
 
 // Prüft getippte Antworten: exakt / ohne Akzente / mit kleinem Tippfehler
-export function checkText(input, answerStr) {
+export function checkText(input, answerStr, lang) {
   const options = alts(answerStr);
+  const best = joinCjk(options[0]);
   const ni = norm(input), si = strip(input);
-  if (!ni) return { ok: false, best: options[0] };
-  for (const a of options) if (norm(a) === ni) return { ok: true, best: a };
+  if (!ni) return { ok: false, best };
+  for (const a of options) if (norm(a) === ni) return { ok: true, best };
+  if (LANGS[lang]?.cjk) {
+    // Pinyin: tones and spaces are optional ("wo he shui", "woheshui")
+    const flat = (x) => strip(x).replace(/[\s']/g, '');
+    for (const a of options) if (flat(a) === flat(input)) return { ok: true, best };
+  }
   for (const a of options) if (strip(a) === si) return { ok: true, best: a, note: 'Achte auf die Sonderzeichen' };
   for (const a of options) {
     const sa = strip(a);
@@ -55,7 +64,7 @@ export function similarity(heard, answerStr) {
   return best;
 }
 
-export const tokens = (sentence) => sentence.split(/\s+/).map((t) => t.replace(/[¿¡?!.,;:"„“”]/g, '')).filter(Boolean);
+export const tokens = (sentence) => sentence.split(/\s+/).map((t) => t.replace(/[¿¡?!.,;:"„“”？！。，、；：]/g, '')).filter(Boolean);
 
 // ---------- Schwierigkeit ----------
 // 0 (ganz leicht) … 10 (sehr schwer). Steigt mit Einheit, Lektion, Level und Trefferquote.

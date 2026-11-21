@@ -1,7 +1,7 @@
 # 🐧 LingoPingo
 
-Verspielte Sprachlern-Web-App (Duolingo-Stil) für **Deutsch → Spanisch, Englisch, Kroatisch**.
-Mobile-first, läuft in Docker, keine externen Abhängigkeiten.
+Verspielte Sprachlern-Web-App (Duolingo-Stil) für **Deutsch → Spanisch, Englisch, Kroatisch, Italienisch, Französisch, Türkisch, Chinesisch**.
+Mobile-first, läuft in Docker oder als Android-App, keine externen Abhängigkeiten.
 
 ## Starten
 
@@ -22,7 +22,8 @@ Profile und Fortschritt liegen im Volume `lingopingo-data` (`/data/profiles.json
 
 | Bereich | Was drin ist |
 |---|---|
-| **Lernpfad** | 21 Einheiten (Begrüßung, Essen, Tiere, Farben, Zahlen, Familie, Reisen, Alltag, Gefühle, Wetter, Restaurant, Kleidung, Körper, Zuhause, Einkaufen, Berufe, Wochentage, Fragen, Natur, Freizeit, Beim Arzt) mit je 4 Lektionen + Meisterprüfung 👑 |
+| **Lernpfad** | 27 Einheiten (Begrüßung, Essen, Tiere, Farben, Zahlen, Familie, Reisen, Alltag, Gefühle, Wetter, Restaurant, Kleidung, Körper, Zuhause, Einkaufen, Berufe, Wochentage, Fragen, Natur, Freizeit, Beim Arzt, Tagesablauf, Stadt, Schule, Technik, Sport, Feiern) mit je 4 Lektionen + Meisterprüfung 👑 |
+| **Chinesisch** | Zeichen mit Pinyin als Lesehilfe. Beim Tippen reicht Pinyin, Töne und Leerzeichen sind optional (`wo he shui` = 我喝水). |
 | **Aufgabentypen** | Bild wählen, Übersetzung wählen, Hören & wählen, Paare finden, Satz aus Bausteinen bauen, Wort/Satz tippen, Diktat, Sprechen 🎤 |
 | **Steigende Schwierigkeit** | Die Schwierigkeit (0–10) ergibt sich aus Einheit, Lektion, Level und deiner Trefferquote. Sie bestimmt Aufgabentypen (von Bildkarten bis zum freien Schreiben), die Anzahl der Antwortoptionen, zusätzliche Ablenker-Bausteine und weniger Bild-Hilfen. Wer >92 % richtig hat, bekommt schwerere Aufgaben, bei vielen Fehlern wird es leichter. |
 | **Punkte** | XP mit Combo-Multiplikator (×1,5 ab 5, ×2 ab 10), Perfekt-Bonus, doppelte XP in der Prüfung, Level, Ligen (Bronze → Diamant), Tagesziel, Streak 🔥 mit Streak-Schutz, Perlen 💎, 14 Erfolge |
@@ -31,6 +32,21 @@ Profile und Fortschritt liegen im Volume `lingopingo-data` (`/data/profiles.json
 | **Rangliste** | Alle Profile auf dem Server, wöchentlich und gesamt |
 | **Sound & Sprache** | Synthetisierte Soundeffekte, Vorlesen per Web Speech API (mit 🐢-Langsam-Taste), Spracherkennung |
 | **Antwortprüfung** | Großschreibung und Satzzeichen sind egal. Fehlende Akzente (á, č, đ …) und kleine Tippfehler gelten mit Hinweis als richtig, mehrere Übersetzungen sind möglich. |
+
+## Android-App (APK)
+
+```bash
+node android/build.mjs        # oder: npm run apk
+```
+
+* Braucht ein JDK (17+) und das Android-SDK (build-tools + platform), **kein** Gradle/Android Studio.
+* Ergebnis: `android/dist/LingoPingo.apk`. Eine Kopie landet in `public/download/`, sodass der Server sie unter
+  **/download/LingoPingo.apk** zum Herunterladen anbietet. Auf dem Handy öffnen und die Installation aus „unbekannten Quellen“ erlauben.
+* Die App enthält die komplette Web-App und funktioniert offline. Vorlesen und Spracherkennung laufen über die
+  Android-Dienste (Google-Sprachausgabe bzw. Google-Spracherkennung).
+* Rangliste/Sync: in der App unter *Profil → Server für Rangliste* die Adresse des Servers eintragen, z. B. `192.168.1.10:8080`.
+* Signiert wird mit `android/lingopingo.keystore` (wird beim ersten Build erzeugt, nicht im Git). Für Updates immer denselben
+  Schlüssel verwenden, sonst muss die App vorher deinstalliert werden. Passwort über `LINGOPINGO_KS_PASS` änderbar.
 
 ## Hinweise zu Sprache/Audio
 
@@ -41,9 +57,9 @@ Profile und Fortschritt liegen im Volume `lingopingo-data` (`/data/profiles.json
 
 ## Neue Sprache hinzufügen
 
-In `public/js/course.js`:
-1. In `LANGS` einen Eintrag ergänzen, z. B. `it: { name: 'Italienisch', native: 'Italiano', flag: '🇮🇹', tts: 'it-IT', accents: 'àèéìòù' }`
-2. Bei jedem Wort und Satz den Schlüssel `it: '…'` ergänzen (Alternativen mit `|` trennen)
+1. `public/js/lang/xx.js` anlegen (Vorlage: `it.js`): pro Einheit 8 Wörter und 4 Sätze in derselben Reihenfolge wie in `course.js`,
+   Alternativen mit `|` trennen
+2. In `public/js/course.js` importieren, in `PACKS` und `LANGS` eintragen, z. B. `pt: { name: 'Portugiesisch', native: 'Português', flag: '🇵🇹', tts: 'pt-PT', accents: 'áâãàçéêíóôõú' }`
 3. Optional eine SVG-Flagge in `FLAGS` ergänzen
 
 Neue Einheiten sind einfach weitere Objekte im Array `UNITS`.
@@ -57,7 +73,9 @@ public/css/style.css   Gesamtes Styling (inkl. Dark Mode)
 public/js/app.js       Oberfläche: Screens, Lektionsablauf, Aufgaben-Renderer
 public/js/lesson.js    Lektionsgenerator, Schwierigkeit, Antwortprüfung
 public/js/store.js     Profile, XP/Level/Streak/Herzen/Erfolge, Sync Server ↔ localStorage
-public/js/course.js    Kursinhalte
+public/js/course.js    Kursinhalte (DE/ES/EN/HR) + Zusammenführung der Sprachpakete
+public/js/lang/*.js    Sprachpakete Italienisch, Französisch, Türkisch, Chinesisch
+android/               Android-App (WebView + native Sprachausgabe/-erkennung), Build-Skript build.mjs
 public/js/audio.js     Soundeffekte, Vorlesen, Spracherkennung
 public/js/mascot.js    Maskottchen „Pingo“ (SVG)
 ```

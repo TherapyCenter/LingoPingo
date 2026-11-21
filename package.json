@@ -1,8 +1,11 @@
 {
   "name": "lingopingo",
-  "version": "1.0.0",
-  "description": "Verspielte Sprachlern-App (Deutsch → Spanisch, Englisch, Kroatisch)",
+  "version": "1.1.0",
+  "description": "Verspielte Sprachlern-App (Deutsch → Spanisch, Englisch, Kroatisch, Italienisch, Französisch, Türkisch, Chinesisch)",
   "main": "server.js",
-  "scripts": { "start": "node server.js" },
+  "scripts": {
+    "start": "node server.js",
+    "apk": "node android/build.mjs"
+  },
   "license": "MIT"
 }

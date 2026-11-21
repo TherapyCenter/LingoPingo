@@ -1,6 +1,6 @@
-import { LANGS, UNITS, LESSONS_PER_UNIT, main, itemsOfUnit, flag } from './course.js';
+import { LANGS, UNITS, LESSONS_PER_UNIT, main, itemsOfUnit, flag, disp, reading } from './course.js';
 import * as store from './store.js';
-import { sfx, speak, listen, setSoundEnabled, setSpeechRate, ttsSupported, recognitionSupported, hasVoice, voiceName, ensureVoices } from './audio.js';
+import { sfx, speak, listen, setSoundEnabled, setSpeechRate, ttsSupported, recognitionSupported, hasVoice, voiceName, ensureVoices, stopSpeaking, isAndroidApp } from './audio.js';
 import { buildSession, makeExercise, checkText, similarity, tokens, shuffle, norm, unitLessonLabel, pauseSpeaking, highestUnit } from './lesson.js';
 import { mascot } from './mascot.js';
 import { confetti } from './fx.js';
@@ -232,7 +232,7 @@ function guidebook(ui) {
   modal(`<h2>${u.icon} ${esc(u.title)}</h2>
     <div class="tip-box">${mascot('think', 56)}<p>${esc(u.tip)}</p></div>
     <div class="vocab">${items.map((it) => `<button class="vocab-row" data-say="${esc(main(it[lang()]))}">
-      <span class="ve">${it.kind === 'word' ? it.e : '💬'}</span><span class="vt"><b>${esc(main(it[lang()]))}</b><small>${esc(it.de)}</small></span><span class="vs">🔊</span></button>`).join('')}</div>
+      <span class="ve">${it.kind === 'word' ? it.e : '💬'}</span><span class="vt"><b>${tgt(it[lang()], lang())}</b><small>${esc(it.de)}</small></span><span class="vs">🔊</span></button>`).join('')}</div>
     <button class="btn wide" data-close>Schließen</button>`, { cls: 'tall' });
   $$('.vocab-row').forEach((b) => b.onclick = () => speak(b.dataset.say, lang()));
 }
@@ -254,7 +254,7 @@ function practiceTab() {
       ${seenWords.length ? `<div class="vocab">${seenWords.sort((a, b) => store.itemState(P, a.key).s - store.itemState(P, b.key).s).map((it) => {
         const s = store.itemState(P, it.key).s;
         return `<button class="vocab-row" data-say="${esc(main(it[lang()]))}"><span class="ve">${it.kind === 'word' ? it.e : '💬'}</span>
-        <span class="vt"><b>${esc(main(it[lang()]))}</b><small>${esc(it.de)}</small></span>
+        <span class="vt"><b>${tgt(it[lang()], lang())}</b><small>${esc(it.de)}</small></span>
         <span class="strength s${s}" title="Stärke ${s}/5">${'▮'.repeat(s)}${'▯'.repeat(5 - s)}</span></button>`;
       }).join('')}</div>` : '<p class="muted">Mach deine erste Lektion, dann erscheinen hier deine Wörter.</p>'}
     </div>`;
@@ -321,6 +321,9 @@ function profileTab() {
       <label class="range"><span>🎯 Tagesziel</span><select data-goal>${[10, 20, 30, 50, 80].map((g) => `<option value="${g}" ${P.dailyGoal === g ? 'selected' : ''}>${g} XP ${['(Locker)', '(Normal)', '(Ernsthaft)', '(Intensiv)', '(Wahnsinn)'][[10, 20, 30, 50, 80].indexOf(g)]}</option>`).join('')}</select></label>
       ${!recognitionSupported() ? `<p class="muted small">Sprechaufgaben brauchen Chrome, Edge oder Safari und eine sichere Verbindung (https oder localhost).</p>` : ''}
     </div>
+    ${isAndroidApp || store.serverUrl() ? `<div class="card"><h3>🌐 Server für Rangliste</h3>
+      <p class="muted small">Optional: Adresse deines LingoPingo-Servers, damit Fortschritt und Rangliste geteilt werden. Leer lassen = alles bleibt nur auf diesem Gerät.</p>
+      <div class="server-row"><input class="input" id="srv" placeholder="z. B. 192.168.1.10:8080" value="${esc(store.serverUrl())}" autocapitalize="off" spellcheck="false"><button class="btn small" id="srvsave">Speichern</button></div></div>` : ''}
     <div class="card voices"><h3>🔊 Aussprache testen</h3>
       ${!ttsSupported() ? '<p class="muted">Dieser Browser unterstützt keine Sprachausgabe.</p>' : Object.entries(LANGS).map(([k, l]) => {
         const vn = voiceName(k);
@@ -339,6 +342,18 @@ function bindProfile() {
   $$('[data-set]').forEach((i) => i.onchange = () => { P.settings[i.dataset.set] = i.checked; applySettings(); store.save(P); sfx.tap(); });
   const r = $('[data-rate]'); if (r) r.onchange = () => { P.settings.rate = +r.value; applySettings(); store.save(P); say(main(UNITS[0].sentences[0][lang()])); };
   $$('[data-vtest]').forEach((b) => b.onclick = () => speak(main(UNITS[0].sentences[0][b.dataset.vtest]), b.dataset.vtest));
+  const sv = $('#srvsave');
+  if (sv) sv.onclick = async () => {
+    const u = store.setServerUrl($('#srv').value);
+    $('#srv').value = u;
+    if (!u) return toast('📱 Fortschritt wird nur auf diesem Gerät gespeichert.');
+    try {
+      const r = await fetch(u + '/api/profiles');
+      if (!r.ok) throw new Error();
+      store.save(P, true);
+      toast('✅ Mit dem Server verbunden – Fortschritt wird synchronisiert.');
+    } catch { toast('⚠️ Server nicht erreichbar. Stimmt die Adresse und bist du im selben WLAN?', 5000); }
+  };
   const g = $('[data-goal]'); if (g) g.onchange = () => { P.dailyGoal = +g.value; store.save(P); toast('🎯 Tagesziel gespeichert'); };
 }
 
@@ -443,7 +458,7 @@ function quitLesson() {
   if (S.timeLimit) return finishSession();
   modal(`<div class="center-txt">${mascot('sad', 100)}<h2>Wirklich aufhören?</h2><p class="muted">Dein Fortschritt in dieser Lektion geht verloren.</p>
     <button class="btn primary wide" data-close>Weiterlernen</button><button class="btn ghost wide" id="really">Beenden</button></div>`);
-  $('#really').onclick = () => { closeModal(); window.speechSynthesis?.cancel(); store.save(P); renderHome(); };
+  $('#really').onclick = () => { closeModal(); stopSpeaking(); store.save(P); renderHome(); };
 }
 
 function startTurboClock() {
@@ -505,7 +520,7 @@ function correctAnswerText(ex) {
   const it = ex.item;
   if (!it) return '';
   if (['toNative', 'buildNative'].includes(ex.type)) return main(it.de);
-  return main(it[ex.lang]);
+  return disp(it[ex.lang]);
 }
 
 function submit(res) {
@@ -541,8 +556,10 @@ function submit(res) {
     if (navigator.vibrate) navigator.vibrate(120);
     bar.classList.add('bad');
     const answer = res.best || correctAnswerText(ex);
+    const isTarget = ex.item && !['toNative', 'buildNative'].includes(ex.type);
+    const ansHtml = isTarget && answer === disp(ex.item[ex.lang]) ? tgt(ex.item[ex.lang], ex.lang) : esc(answer);
     fb.innerHTML = `<div class="fb-title">${res.timeout ? '⏰ Zeit abgelaufen!' : res.skipped ? '⏭️ Übersprungen' : '❌ Leider falsch'}</div>
-      <div class="fb-sub">Richtige Antwort: <b>${esc(answer)}</b> <button class="mini-say" id="fbsay">🔊</button></div>${res.heard ? `<div class="fb-sub">Gehört: „${esc(res.heard)}“</div>` : ''}`;
+      <div class="fb-sub">Richtige Antwort: <b>${ansHtml}</b> <button class="mini-say" id="fbsay">🔊</button></div>${res.heard ? `<div class="fb-sub">Gehört: „${esc(res.heard)}“</div>` : ''}`;
     const fs = $('#fbsay'); if (fs) fs.onclick = () => speak(main(ex.item[ex.lang]), lang());
     if (S.usesHearts && !res.skipped) {
       P.hearts = Math.max(0, P.hearts - 1);
@@ -603,7 +620,7 @@ function outOfHearts() {
 function finishSession() {
   if (!S) return;
   clearTimers();
-  window.speechSynthesis?.cancel();
+  stopSpeaking();
   const s = S; S = null;
   const secs = Math.round((Date.now() - s.startedAt) / 1000);
   const perfect = s.wrong === 0 && s.mode !== 'turbo';
@@ -674,6 +691,8 @@ function finishSession() {
 
 // ========== Aufgaben-Renderer ==========
 const T = (ex) => LANGS[ex.lang];
+// Target-language text as HTML (Chinese: without word gaps, with pinyin below)
+const tgt = (s, l) => { const r = reading(s, l); return `${esc(disp(s))}${r ? `<small class="py">${esc(r)}</small>` : ''}`; };
 const speakerBtn = (text, l, big = false) => `<div class="speakers ${big ? 'big' : ''}"><button class="spk" data-spk="${esc(text)}" data-l="${l}">🔊</button><button class="spk slow" data-spk="${esc(text)}" data-l="${l}" data-slow="1">🐢</button></div>`;
 function bindSpeakers(root) {
   $$('[data-spk]', root).forEach((b) => b.onclick = (e) => { e.stopPropagation(); b.classList.add('playing'); speak(b.dataset.spk, b.dataset.l, { slow: !!b.dataset.slow }).then(() => b.classList.remove('playing')); });
@@ -683,7 +702,7 @@ const newBadge = (ex) => (ex.item && store.itemState(P, ex.item.key).n === 0 ? '
 
 function choiceList(ex, box, options, labelOf, speakOf) {
   const grid = $('.choices', box);
-  grid.innerHTML = options.map((o, i) => `<button class="choice" data-i="${i}"><span class="kbd">${i + 1}</span>${esc(labelOf(o))}</button>`).join('');
+  grid.innerHTML = options.map((o, i) => `<button class="choice" data-i="${i}"><span class="kbd">${i + 1}</span>${labelOf(o)}</button>`).join('');
   let sel = null;
   $$('.choice', grid).forEach((b) => b.onclick = () => {
     if (ctrl.answered) return;
@@ -703,7 +722,7 @@ function choiceList(ex, box, options, labelOf, speakOf) {
 function textInput(ex, box, answerStr, placeholder) {
   const accents = T(ex).accents;
   const isNativeAnswer = false;
-  $('.answer-area', box).innerHTML = `<textarea class="input type-in" rows="${ex.kind === 'sentence' ? 3 : 1}" placeholder="${placeholder}" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+  $('.answer-area', box).innerHTML = `<textarea class="input type-in" rows="${ex.kind === 'sentence' ? 3 : 1}" placeholder="${T(ex).cjk ? 'Pinyin oder Zeichen … (Töne optional)' : placeholder}" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
     ${accents && !isNativeAnswer ? `<div class="accents">${[...accents].map((c) => `<button class="acc" data-c="${c}">${c}</button>`).join('')}</div>` : ''}`;
   const inp = $('.type-in', box);
   setTimeout(() => inp.focus({ preventScroll: true }), 250);
@@ -715,7 +734,7 @@ function textInput(ex, box, answerStr, placeholder) {
     inp.value = inp.value.slice(0, s) + b.dataset.c + inp.value.slice(en);
     inp.selectionStart = inp.selectionEnd = s + 1; inp.dispatchEvent(new Event('input'));
   });
-  ctrl.check = () => { inp.readOnly = true; return checkText(inp.value, answerStr); };
+  ctrl.check = () => { inp.readOnly = true; return checkText(inp.value, answerStr, ex.lang); };
 }
 
 function tileBuilder(ex, box, answerStr) {
@@ -738,7 +757,7 @@ function tileBuilder(ex, box, answerStr) {
   });
   ctrl.check = () => {
     const built = $$('.tile', line).map((x) => x.textContent).join(' ');
-    return checkText(built, answerStr).ok ? { ok: true } : { ok: false, best: answerStr.split('|')[0] };
+    return checkText(built, answerStr, answerStr === ex.item.de ? null : ex.lang).ok ? { ok: true } : { ok: false, best: disp(answerStr) };
   };
 }
 
@@ -747,7 +766,7 @@ const RENDER = {
     box.innerHTML = `${header(`Welches davon ist „${esc(ex.item.de)}“?`, newBadge(ex))}<div class="img-grid"></div>`;
     const grid = $('.img-grid', box);
     let sel = null;
-    grid.innerHTML = ex.options.map((o, i) => `<button class="img-card" data-i="${i}"><span class="kbd">${i + 1}</span><span class="emo">${o.e}</span><b>${esc(main(o[ex.lang]))}</b></button>`).join('');
+    grid.innerHTML = ex.options.map((o, i) => `<button class="img-card" data-i="${i}"><span class="kbd">${i + 1}</span><span class="emo">${o.e}</span><b>${tgt(o[ex.lang], ex.lang)}</b></button>`).join('');
     $$('.img-card', grid).forEach((b) => b.onclick = () => {
       if (ctrl.answered) return;
       $$('.img-card', grid).forEach((x) => x.classList.remove('sel'));
@@ -764,15 +783,15 @@ const RENDER = {
   toTarget(ex, box) {
     box.innerHTML = `${header(`Wie sagt man das auf ${T(ex).name}?`, newBadge(ex))}
       <div class="prompt-card">${S.d < 4 ? `<span class="emo-s">${ex.item.e}</span>` : ''}<span class="prompt-word">${esc(ex.item.de)}</span></div><div class="choices"></div>`;
-    choiceList(ex, box, ex.options, (o) => main(o[ex.lang]), (o) => main(o[ex.lang]));
+    choiceList(ex, box, ex.options, (o) => tgt(o[ex.lang], ex.lang), (o) => main(o[ex.lang]));
   },
 
   toNative(ex, box) {
     const w = main(ex.item[ex.lang]);
     box.innerHTML = `${header('Was bedeutet das?', newBadge(ex))}
-      <div class="bubble-row">${mascot('think', 80)}<div class="bubble">${speakerBtn(w, ex.lang)}<span class="prompt-word">${esc(w)}</span></div></div><div class="choices"></div>`;
+      <div class="bubble-row">${mascot('think', 80)}<div class="bubble">${speakerBtn(w, ex.lang)}<span class="prompt-word">${tgt(ex.item[ex.lang], ex.lang)}</span></div></div><div class="choices"></div>`;
     bindSpeakers(box);
-    choiceList(ex, box, ex.options, (o) => main(o.de));
+    choiceList(ex, box, ex.options, (o) => esc(main(o.de)));
     setTimeout(() => say(w), 300);
   },
 
@@ -780,7 +799,7 @@ const RENDER = {
     const w = main(ex.item[ex.lang]);
     box.innerHTML = `${header('Was hörst du?')}${speakerBtn(w, ex.lang, true)}<div class="choices"></div>`;
     bindSpeakers(box);
-    choiceList(ex, box, ex.options, (o) => main(o[ex.lang]));
+    choiceList(ex, box, ex.options, (o) => tgt(o[ex.lang], ex.lang));
     setTimeout(() => say(w), 300);
   },
 
@@ -807,7 +826,7 @@ const RENDER = {
   buildNative(ex, box) {
     const s = main(ex.item[ex.lang]);
     box.innerHTML = `${header('Übersetze ins Deutsche')}
-      <div class="bubble-row">${mascot('think', 80)}<div class="bubble">${speakerBtn(s, ex.lang)}<span class="prompt-sent">${esc(s)}</span></div></div><div class="answer-area"></div>`;
+      <div class="bubble-row">${mascot('think', 80)}<div class="bubble">${speakerBtn(s, ex.lang)}<span class="prompt-sent">${tgt(ex.item[ex.lang], ex.lang)}</span></div></div><div class="answer-area"></div>`;
     bindSpeakers(box);
     tileBuilder(ex, box, ex.item.de);
     setTimeout(() => say(s), 300);
@@ -830,7 +849,7 @@ const RENDER = {
   speak(ex, box) {
     const s = main(ex.item[ex.lang]);
     box.innerHTML = `${header('Sprich diesen Satz')}
-      <div class="bubble-row">${mascot('happy', 80)}<div class="bubble">${speakerBtn(s, ex.lang)}<span class="prompt-sent">${esc(s)}</span><small class="muted">${esc(ex.item.de)}</small></div></div>
+      <div class="bubble-row">${mascot('happy', 80)}<div class="bubble">${speakerBtn(s, ex.lang)}<span class="prompt-sent">${tgt(ex.item[ex.lang], ex.lang)}</span><small class="muted">${esc(ex.item.de)}</small></div></div>
       <button class="mic" id="mic"><span>🎤</span><b>Zum Sprechen tippen</b></button>
       <div class="heard muted" id="heard"></div>
       <button class="link" id="nospeak">Ich kann gerade nicht sprechen</button>`;
@@ -840,7 +859,7 @@ const RENDER = {
     mic.onclick = async () => {
       if (busy || ctrl.answered) return;
       busy = true;
-      window.speechSynthesis?.cancel();
+      stopSpeaking();
       mic.classList.add('rec'); $('b', mic).textContent = 'Ich höre zu …';
       try {
         const res = await listen(ex.lang);
@@ -854,7 +873,7 @@ const RENDER = {
         if (sc >= need) submit({ ok: true, heard });
         else {
           ctrl.tries = (ctrl.tries || 0) + 1;
-          if (ctrl.tries >= 2) submit({ ok: false, heard, best: s });
+          if (ctrl.tries >= 2) submit({ ok: false, heard, best: disp(ex.item[ex.lang]) });
           else { mic.classList.add('shake'); sfx.wrong(); setTimeout(() => mic.classList.remove('shake'), 500); toast('Fast! Versuch es noch einmal 🙂'); }
         }
       } catch (e) {
@@ -870,11 +889,11 @@ const RENDER = {
   match(ex, box) {
     box.innerHTML = `${header('Finde die Paare')}<div class="match-grid"><div class="col" id="left"></div><div class="col" id="right"></div></div>`;
     $('#left', box).innerHTML = ex.left.map((o) => `<button class="mt" data-k="${o.key}" data-side="l">${esc(o.de)}</button>`).join('');
-    $('#right', box).innerHTML = ex.right.map((o) => `<button class="mt" data-k="${o.key}" data-side="r">${esc(main(o[ex.lang]))}</button>`).join('');
+    $('#right', box).innerHTML = ex.right.map((o) => `<button class="mt" data-k="${o.key}" data-side="r" data-say="${esc(main(o[ex.lang]))}">${tgt(o[ex.lang], ex.lang)}</button>`).join('');
     let sel = null; let matched = 0; let mistakes = 0;
     $$('.mt', box).forEach((b) => b.onclick = () => {
       if (b.classList.contains('done')) return;
-      if (b.dataset.side === 'r') say(b.textContent);
+      if (b.dataset.side === 'r') say(b.dataset.say);
       if (!sel || sel.dataset.side === b.dataset.side) {
         if (sel) sel.classList.remove('sel');
         sel = b; b.classList.add('sel'); sfx.tap(); return;
@@ -923,6 +942,14 @@ setInterval(() => { if (P && !S) { const before = P.hearts; store.refreshHearts(
   }
   renderProfiles();
 })();
+
+// Android back button (called by the app): true = handled here
+window.__lpBack = () => {
+  if ($('.modal-wrap')) { closeModal(); return true; }
+  if (S && $('#quit')) { quitLesson(); return true; }
+  if (P && $('.bottomnav') && tab !== 'learn') { tab = 'learn'; renderHome(); return true; }
+  return false;
+};
 
 // Für Debugging in der Konsole
 window.lingopingo = { get profile() { return P; }, get session() { return S; }, norm, tokens, shuffle, highestUnit };
