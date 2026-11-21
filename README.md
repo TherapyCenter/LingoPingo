@@ -1,100 +1,124 @@
 # 🐧 LingoPingo
 
-Verspielte Sprachlern-Web-App (Duolingo-Stil) in **8 Sprachen**: Deutsch, Englisch, Spanisch, Französisch, Italienisch, Kroatisch, Türkisch, Chinesisch.
-Jede davon kann Muttersprache (Oberfläche + Aufgaben) oder Lernsprache sein – also 56 Sprachkombinationen.
-Mobile-first, läuft in Docker oder als Android-App, keine externen Abhängigkeiten.
+**English** · [Deutsch](README.de.md)
 
-## Starten
+A playful, Duolingo-style language learning app in **9 languages**: German, English, Spanish, French, Italian, Croatian, Turkish, Chinese and Japanese.
+Each of them can be your own language (interface + exercises) or the language you learn – 72 language pairs.
+Mobile-first, runs in the browser, in Docker, as an **Android app** and as a **Windows app**. No external dependencies.
+
+## Download
+
+| Platform | How |
+|---|---|
+| 📱 **Android** | [LingoPingo.apk](https://github.com/TherapyCenter/lingopingo/releases/latest/download/LingoPingo.apk) – open it on your phone and allow installing from unknown sources |
+| 🪟 **Windows** | `LingoPingo-Setup-x.y.z.exe` from the [latest release](https://github.com/TherapyCenter/lingopingo/releases/latest) – the app checks for updates and offers to install them |
+| 🌐 **Browser / server** | `docker compose up -d --build`, see below |
+
+> The Windows installer is not code-signed, so Windows SmartScreen may show a warning: *More info → Run anyway*.
+
+## Running the server
 
 ```bash
 docker compose up -d --build
 ```
 
 * Browser: **http://localhost:8080**
-* Handy im Heimnetz: **https://&lt;IP-des-Rechners&gt;:8443**. Das Zertifikat ist selbstsigniert, also die Warnung einmal bestätigen.
-  HTTPS ist nötig, damit Mikrofon/Spracherkennung auf dem Handy funktionieren.
-* Auf dem Handy über „Zum Startbildschirm hinzufügen“ öffnet sich die App wie eine native App.
+* Phone in your home network: **https://&lt;your-computer's-IP&gt;:8443**. The certificate is self-signed, so confirm the warning once.
+  HTTPS is required for the microphone/speech recognition on phones.
+* On a phone, "Add to Home screen" opens the app like a native app.
 
-Ohne Docker: `node server.js` (Node ≥ 18), dann http://localhost:8080.
-
-Profile und Fortschritt liegen im Volume `lingopingo-data` (`/data/profiles.json`).
+Without Docker: `node server.js` (Node ≥ 18), then open http://localhost:8080.
+Profiles and progress are stored in the volume `lingopingo-data` (`/data/profiles.json`).
 
 ## Features
 
-| Bereich | Was drin ist |
+| Area | What's included |
 |---|---|
-| **Lernpfad** | 27 Einheiten (Begrüßung, Essen, Tiere, Farben, Zahlen, Familie, Reisen, Alltag, Gefühle, Wetter, Restaurant, Kleidung, Körper, Zuhause, Einkaufen, Berufe, Wochentage, Fragen, Natur, Freizeit, Beim Arzt, Tagesablauf, Stadt, Schule, Technik, Sport, Feiern) mit je 4 Lektionen + Meisterprüfung 👑 |
-| **Mehrsprachig** | Beim Anlegen des Profils (oder später unter *Profil → Meine Sprache*) wählt man die eigene Sprache. Danach richten sich Oberfläche, Tipps und Aufgaben; gelernt werden kann jede andere Sprache. Der Fortschritt hängt an der Lernsprache und bleibt beim Wechsel erhalten. |
-| **Chinesisch** | Zeichen mit Pinyin als Lesehilfe. Beim Tippen reicht Pinyin, Töne und Leerzeichen sind optional (`wo he shui` = 我喝水). |
-| **Aufgabentypen** | Bild wählen, Übersetzung wählen, Hören & wählen, Paare finden, Satz aus Bausteinen bauen, Wort/Satz tippen, Diktat, Sprechen 🎤 |
-| **Steigende Schwierigkeit** | Die Schwierigkeit (0–10) ergibt sich aus Einheit, Lektion, Level und deiner Trefferquote. Sie bestimmt Aufgabentypen (von Bildkarten bis zum freien Schreiben), die Anzahl der Antwortoptionen, zusätzliche Ablenker-Bausteine und weniger Bild-Hilfen. Wer >92 % richtig hat, bekommt schwerere Aufgaben, bei vielen Fehlern wird es leichter. |
-| **Punkte** | XP mit Combo-Multiplikator (×1,5 ab 5, ×2 ab 10), Perfekt-Bonus, doppelte XP in der Prüfung, Level, Ligen (Bronze → Diamant), Tagesziel, Streak 🔥 mit Streak-Schutz, Perlen 💎, 14 Erfolge |
-| **Herzen** | 5 ❤️, ein Fehler kostet ein Herz, alle 30 Min. kommt eines zurück. Wieder auffüllen geht über Üben oder mit Perlen. |
-| **Üben** | Schwächen trainieren (Spaced Repetition), Hörtraining, Sprechtraining, Turbo-Runde (60 s) |
-| **Rangliste** | Alle Profile auf dem Server, wöchentlich und gesamt |
-| **Sound & Sprache** | Synthetisierte Soundeffekte, Vorlesen per Web Speech API (mit 🐢-Langsam-Taste), Spracherkennung |
-| **Antwortprüfung** | Großschreibung und Satzzeichen sind egal. Fehlende Akzente (á, č, đ …) und kleine Tippfehler gelten mit Hinweis als richtig, mehrere Übersetzungen sind möglich. |
+| **Learning path** | 32 units (greetings, food, animals, colours, numbers, family, travel, everyday life, feelings, weather, restaurant, clothes, body, home, shopping, jobs, days of the week, questions, nature, free time, at the doctor, daily routine, city, school, technology, sports, celebrations, fruit & vegetables, zoo, holidays, opposites, seasons), each with 4 lessons + a timed mastery exam 👑 |
+| **Multilingual** | When creating a profile (or later under *Profile → My language*) you choose your own language. The interface, tips and exercises follow it; any other language can be learned. Progress belongs to the learned language and is kept when switching. |
+| **Chinese & Japanese** | Characters with pinyin/romaji as a reading aid. When typing, pinyin/romaji is enough – tones, long-vowel marks and spaces are optional (`wo he shui` = 我喝水, `arigatou` = ありがとう). |
+| **Exercise types** | Pick the picture, pick the translation, listen & pick, match pairs, build sentences from tiles, type words/sentences, dictation, speaking 🎤 |
+| **Increasing difficulty** | Difficulty (0–10) depends on unit, lesson, level and your accuracy. It controls exercise types (from picture cards to free writing), the number of options, extra distractor tiles and fewer picture hints. Above 92 % accuracy it gets harder, with many mistakes it gets easier. |
+| **Points** | XP with combo multiplier (×1.5 from 5, ×2 from 10), perfect bonus, double XP in exams, levels, leagues (Bronze → Diamond), daily goal, streak 🔥 with streak freeze, gems 💎, 14 achievements |
+| **Hearts** | 5 ❤️, every mistake costs a heart, one comes back every 30 minutes. Refill by practising or with gems. |
+| **Practice** | Train weak spots (spaced repetition), listening, speaking, turbo round (60 s) |
+| **Leaderboard** | All profiles on the server, weekly and all time |
+| **Sound & speech** | Synthesized sound effects, read-aloud (with a 🐢 slow button), speech recognition |
+| **Answer checking** | Case and punctuation don't matter. Missing accents (á, č, đ …) and small typos count as correct with a hint; several translations are accepted. |
 
-## Android-App (APK)
+## Android app (APK)
 
 ```bash
-node android/build.mjs        # oder: npm run apk
+node android/build.mjs        # or: npm run apk
 ```
 
-* Braucht ein JDK (17+) und das Android-SDK (build-tools + platform), **kein** Gradle/Android Studio.
-* Ergebnis: `android/dist/LingoPingo.apk`. Eine Kopie landet in `public/download/`, sodass der Server sie unter
-  **/download/LingoPingo.apk** zum Herunterladen anbietet. Auf dem Handy öffnen und die Installation aus „unbekannten Quellen“ erlauben.
-* Die App enthält die komplette Web-App und funktioniert offline. Vorlesen und Spracherkennung laufen über die
-  Android-Dienste (Google-Sprachausgabe bzw. Google-Spracherkennung).
-* Rangliste/Sync: in der App unter *Profil → Server für Rangliste* die Adresse des Servers eintragen, z. B. `192.168.1.10:8080`.
-* Signiert wird mit `android/lingopingo.keystore` (wird beim ersten Build erzeugt, nicht im Git). Das Passwort steht in
-  `android/keystore.pass` (ebenfalls nicht im Git) oder in der Umgebungsvariable `LINGOPINGO_KS_PASS`. Für Updates immer
-  denselben Schlüssel verwenden, sonst muss die App vorher deinstalliert werden.
+* Needs a JDK (17+) and the Android SDK (build-tools + platform), **no** Gradle/Android Studio.
+* Output: `android/dist/LingoPingo.apk`. A copy goes to `public/download/`, so the server offers it at **/download/LingoPingo.apk**.
+* The app contains the complete web app and works offline. Read-aloud and speech recognition use the Android services.
+* Leaderboard/sync: enter your server address in the app under *Profile → Leaderboard server*, e.g. `192.168.1.10:8080`.
+* Signed with `android/lingopingo.keystore` (created on the first build, not in git). The password is read from
+  `android/keystore.pass` (not in git) or the environment variable `LINGOPINGO_KS_PASS`. Always use the same key –
+  otherwise the app has to be uninstalled before an update.
 
-### Automatische Releases (GitHub Actions)
+## Windows app
 
-Der Workflow `.github/workflows/android-release.yml` baut die APK auf GitHub und veröffentlicht sie unter **Releases**:
+```bash
+cd desktop
+npm install
+npm start          # run the app
+npm run dist       # build the installer -> desktop/dist/LingoPingo-Setup-x.y.z.exe
+```
 
-* Wird auf `main` die Version in `package.json` erhöht (z. B. `1.2.0` → `1.3.0`), entsteht automatisch das Release `v1.3.0`
-  mit `LingoPingo.apk`.
-* Manuell starten (*Actions → Android APK release → Run workflow*) baut die APK der aktuellen Version neu.
-* Einmalig nötig sind zwei Repository-Secrets mit dem Signaturschlüssel:
+* Electron wrapper around the bundled web app (`public/` is shipped inside the app, works offline).
+* Read-aloud uses the Windows voices; speech recognition is not available there, so speaking exercises are skipped.
+  Missing voices: *Settings → Time & language → Language & region → Add a language* (with text-to-speech).
+* **Updates:** on start (and every 4 hours) the app checks the GitHub releases. If there is a newer version it asks whether to
+  download it and then offers to restart and install it. Progress is kept.
+
+## Automatic releases (GitHub Actions)
+
+The workflow `.github/workflows/release.yml` builds both apps and publishes them under **Releases**:
+
+* Raising the version in `package.json` on `main` (e.g. `1.3.0` → `1.4.0`) automatically creates the release `v1.4.0`
+  with `LingoPingo.apk` and `LingoPingo-Setup-1.4.0.exe` (plus `latest.yml` for the Windows updater).
+* A manual run (*Actions → Release → Run workflow*) rebuilds the current version and replaces its files.
+* Two repository secrets with the Android signing key are needed once:
   ```bash
   base64 -w0 android/lingopingo.keystore | gh secret set ANDROID_KEYSTORE_B64
   gh secret set LINGOPINGO_KS_PASS < android/keystore.pass
   ```
-* Neueste APK direkt: `https://github.com/<user>/lingopingo/releases/latest/download/LingoPingo.apk`
 
-## Hinweise zu Sprache/Audio
+## Notes on speech/audio
 
-* **Vorlesen** nutzt die Stimmen des Geräts. Android/Chrome hat meist alle drei Sprachen. Unter Windows braucht man für Kroatisch eventuell
-  ein Sprachpaket (*Einstellungen → Zeit & Sprache → Sprache → Kroatisch hinzufügen*, inkl. Sprachausgabe).
-* **Spracherkennung** funktioniert in Chrome, Edge und Safari, nicht in Firefox. Sie braucht `localhost` oder HTTPS. Ist sie nicht verfügbar,
-  werden Sprechaufgaben automatisch durch andere Aufgaben ersetzt.
+* **Read-aloud** uses the device's voices. Android/Chrome usually has all languages; on Windows some languages need a language pack.
+* **Speech recognition** works in Chrome, Edge and Safari (not Firefox) and needs `localhost` or HTTPS. If it isn't available,
+  speaking exercises are replaced by other exercises automatically.
 
-## Neue Sprache hinzufügen
+## Adding a language
 
-1. `public/js/lang/xx.js` anlegen (Vorlage: `it.js`): pro Einheit 8 Wörter und 4 Sätze in derselben Reihenfolge wie in `course.js`,
-   Alternativen mit `|` trennen
-2. In `public/js/course.js` importieren, in `PACKS` und `LANGS` eintragen, z. B. `pt: { name: 'Portugiesisch', native: 'Português', flag: '🇵🇹', tts: 'pt-PT', accents: 'áâãàçéêíóôõú' }`
-3. Optional eine SVG-Flagge in `FLAGS` ergänzen
-4. Als Oberflächensprache: `public/js/i18n/xx.js` anlegen (Vorlage: `en.js`) und in `public/js/i18n.js` eintragen
+1. Create `public/js/lang/xx.js` (template: `it.js`): per unit 8 words and 4 sentences in the same order as in `course.js`,
+   alternatives separated by `|`
+2. Import it in `public/js/course.js` and add it to `PACKS` and `LANGS`, e.g. `pt: { name: 'Portugiesisch', native: 'Português', flag: '🇵🇹', tts: 'pt-PT', accents: 'áâãàçéêíóôõú' }`
+3. Optionally add an SVG flag to `FLAGS`
+4. As an interface language: create `public/js/i18n/xx.js` (template: `en.js`) and register it in `public/js/i18n.js`
 
-Neue Einheiten sind einfach weitere Objekte im Array `UNITS`.
+New units are simply more objects in the `UNITS` array.
 
-## Struktur
+## Project structure
 
 ```
-server.js              Node-Server (statische Dateien + /api/profiles), ohne npm-Abhängigkeiten
+server.js              Node server (static files + /api/profiles), no npm dependencies
 public/index.html
-public/css/style.css   Gesamtes Styling (inkl. Dark Mode)
-public/js/app.js       Oberfläche: Screens, Lektionsablauf, Aufgaben-Renderer
-public/js/lesson.js    Lektionsgenerator, Schwierigkeit, Antwortprüfung
-public/js/store.js     Profile, XP/Level/Streak/Herzen/Erfolge, Sync Server ↔ localStorage
-public/js/course.js    Kursinhalte (DE/ES/EN/HR) + Zusammenführung der Sprachpakete
-public/js/lang/*.js    Sprachpakete Italienisch, Französisch, Türkisch, Chinesisch
-public/js/i18n.js      Oberflächen-Übersetzung (t()), Texte je Sprache in public/js/i18n/xx.js
-android/               Android-App (WebView + native Sprachausgabe/-erkennung), Build-Skript build.mjs
-public/js/audio.js     Soundeffekte, Vorlesen, Spracherkennung
-public/js/mascot.js    Maskottchen „Pingo“ (SVG)
+public/css/style.css   All styles (incl. dark mode)
+public/js/app.js       UI: screens, lesson flow, exercise renderers
+public/js/lesson.js    Lesson generator, difficulty, answer checking
+public/js/store.js     Profiles, XP/level/streak/hearts/achievements, sync server ↔ localStorage
+public/js/course.js    Course content (DE/ES/EN/HR) + merging of the language packs
+public/js/lang/*.js    Language packs: Italian, French, Turkish, Chinese, Japanese
+public/js/i18n.js      Interface translation (t()), texts per language in public/js/i18n/xx.js
+public/js/audio.js     Sound effects, read-aloud, speech recognition (incl. Android bridge)
+public/js/mascot.js    Mascot "Pingo" (SVG)
+android/               Android app (WebView + native speech), build script build.mjs
+desktop/               Windows app (Electron + auto-update)
+.github/workflows/     Automatic releases
 ```

@@ -1,6 +1,6 @@
 import { LANGS, UNITS, LESSONS_PER_UNIT, main, itemsOfUnit, flag, disp, reading } from './course.js';
 import * as store from './store.js';
-import { sfx, speak, listen, setSoundEnabled, setSpeechRate, ttsSupported, recognitionSupported, hasVoice, voiceName, ensureVoices, stopSpeaking, isAndroidApp } from './audio.js';
+import { sfx, speak, listen, setSoundEnabled, setSpeechRate, ttsSupported, recognitionSupported, hasVoice, voiceName, ensureVoices, stopSpeaking, isAndroidApp, isDesktopApp } from './audio.js';
 import { buildSession, makeExercise, checkText, similarity, tokens, shuffle, norm, pauseSpeaking, highestUnit } from './lesson.js';
 import { t, langName, langInText, leagueName, achText, unitTitle, unitTip, praise, setUiLang, initialUiLang, uiLang, locale, UI_LANGS } from './i18n.js';
 import { mascot } from './mascot.js';
@@ -139,7 +139,7 @@ function renderCourseSelect(first = false) {
     P.currentCourse = b.dataset.c; store.course(P); store.save(P);
     sfx.pop(); say(LANGS[lang()].native);
     tab = 'learn'; renderHome();
-    if (ttsSupported() && !hasVoice(lang())) setTimeout(() => toast(t('noVoiceCourse', { lang: langName(lang()) }), 6000), 800);
+    if (ttsSupported() && !hasVoice(lang())) { voiceWarned = true; setTimeout(() => toast(t('noVoiceCourse', { lang: langName(lang()) }) + (isDesktopApp ? `<br><small>${t('voiceWin')}</small>` : ''), 7000), 800); }
   });
 }
 
@@ -334,7 +334,7 @@ function profileTab() {
       <label class="range"><span>${t('goal')}</span><select data-goal>${[10, 20, 30, 50, 80].map((g, i) => `<option value="${g}" ${P.dailyGoal === g ? 'selected' : ''}>${g} XP (${t('goal' + i)})</option>`).join('')}</select></label>
       ${!recognitionSupported() ? `<p class="muted small">${t('speakNeeds')}</p>` : ''}
     </div>
-    ${isAndroidApp || store.serverUrl() ? `<div class="card"><h3>${t('serverTitle')}</h3>
+    ${isAndroidApp || isDesktopApp || store.serverUrl() ? `<div class="card"><h3>${t('serverTitle')}</h3>
       <p class="muted small">${t('serverInfo')}</p>
       <div class="server-row"><input class="input" id="srv" placeholder="${esc(t('serverPh'))}" value="${esc(store.serverUrl())}" autocapitalize="off" spellcheck="false"><button class="btn small" id="srvsave">${t('save')}</button></div></div>` : ''}
     <div class="card voices"><h3>${t('testVoices')}</h3>
@@ -744,7 +744,7 @@ function choiceList(ex, box, options, labelOf, speakOf) {
 function textInput(ex, box, answerStr, placeholder) {
   const accents = T(ex).accents;
   const isNativeAnswer = false;
-  $('.answer-area', box).innerHTML = `<textarea class="input type-in" rows="${ex.kind === 'sentence' ? 3 : 1}" placeholder="${esc(T(ex).cjk ? t('pinyinPh') : placeholder)}" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+  $('.answer-area', box).innerHTML = `<textarea class="input type-in" rows="${ex.kind === 'sentence' ? 3 : 1}" placeholder="${esc(T(ex).cjk ? t(ex.lang === 'ja' ? 'romajiPh' : 'pinyinPh') : placeholder)}" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
     ${accents && !isNativeAnswer ? `<div class="accents">${[...accents].map((c) => `<button class="acc" data-c="${c}">${c}</button>`).join('')}</div>` : ''}`;
   const inp = $('.type-in', box);
   setTimeout(() => inp.focus({ preventScroll: true }), 250);
@@ -984,6 +984,6 @@ function warnMissingVoice() {
   ensureVoices().then(() => {
     if (voiceWarned || hasVoice(lang())) return;
     voiceWarned = true;
-    toast(t('missingVoice', { lang: langName(lang()) }), 9000);
+    toast(t('missingVoice', { lang: langName(lang()) }) + (isDesktopApp ? `<br><small>${t('voiceWin')}</small>` : ''), 9000);
   });
 }

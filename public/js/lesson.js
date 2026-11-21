@@ -41,8 +41,9 @@ export function checkText(input, answerStr, lang) {
   if (!ni) return { ok: false, best };
   for (const a of options) if (norm(a) === ni) return { ok: true, best };
   if (LANGS[lang]?.cjk) {
-    // Pinyin: tones and spaces are optional ("wo he shui", "woheshui")
-    const flat = (x) => strip(x).replace(/[\s']/g, '');
+    // Pinyin/romaji: tones, long-vowel marks and spaces are optional ("wo he shui", "arigatou")
+    let flat = (x) => strip(x).replace(/[\s'-]/g, '');
+    if (lang === 'ja') { const f0 = flat; flat = (x) => f0(x).replace(/ou/g, 'o').replace(/([aeiou])\1+/g, '$1'); }
     for (const a of options) if (flat(a) === flat(input)) return { ok: true, best };
   }
   for (const a of options) if (strip(a) === si) return { ok: true, best: a, note: 'accents' };

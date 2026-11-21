@@ -1,7 +1,7 @@
 {
   "name": "lingopingo",
-  "version": "1.2.0",
-  "description": "Verspielte Sprachlern-App in 8 Sprachen (DE, EN, ES, FR, IT, HR, TR, ZH)",
+  "version": "1.3.0",
+  "description": "Playful language learning app in 9 languages (DE, EN, ES, FR, IT, HR, TR, ZH, JA)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

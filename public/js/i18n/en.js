@@ -1,5 +1,5 @@
 export default {
-  langs: { de: 'German', en: 'English', es: 'Spanish', fr: 'French', it: 'Italian', hr: 'Croatian', tr: 'Turkish', zh: 'Chinese' },
+  langs: { de: 'German', en: 'English', es: 'Spanish', fr: 'French', it: 'Italian', hr: 'Croatian', tr: 'Turkish', zh: 'Chinese', ja: 'Japanese' },
   leagues: ['Bronze', 'Silver', 'Gold', 'Sapphire', 'Ruby', 'Diamond'],
   ach: {
     first: ['First step', 'Finish your first lesson'],
@@ -45,6 +45,11 @@ export default {
     tech: ['Technology', 'Many tech words are international – but not all of them!'],
     sports: ['Sports', 'Cheer for your team in a new language.'],
     party: ['Celebrations', 'Wishes for celebrations are fixed phrases – learn them by heart.'],
+    produce: ['Fruit & vegetables', 'Try these words out right away at the market.'],
+    zoo: ['At the zoo', 'Animal names are often international – but not always!'],
+    vacation: ['Holidays', 'Passport, ticket, suitcase – with these words your trip can begin.'],
+    opposites: ['Opposites', 'Learn words in pairs: hot and cold are easier to remember together.'],
+    seasons: ['Seasons', 'Say the date in your new language once a month.'],
   },
   s: {
     tagline: 'Learning languages – as easy as play!',
@@ -181,7 +186,9 @@ export default {
     newWord: 'NEW WORD',
     inLang: 'In {lang} …', translationIn: 'Translation in {lang} …',
     pinyinPh: 'Pinyin or characters … (tones optional)',
+    romajiPh: 'Romaji or kana … (long vowels optional)',
     missingVoice: '🔈 No {lang} voice is installed on this device – so the pronunciation sounds wrong.<br><small>Android: Settings → Text-to-speech → Install voice data. iPhone: Settings → Accessibility → Spoken Content → Voices.</small>',
     sameLanguage: "That's your own language – choose another one.",
+    voiceWin: 'Windows: Settings → Time & language → Language & region → Add a language (with text-to-speech).',
   },
 };

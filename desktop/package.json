@@ -1,0 +1,75 @@
+{
+  "name": "lingopingo-desktop",
+  "productName": "LingoPingo",
+  "version": "1.3.0",
+  "description": "LingoPingo – playful language learning (Windows app)",
+  "author": "LingoPingo",
+  "license": "MIT",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win --publish never"
+  },
+  "dependencies": {
+    "electron-updater": "^6.3.9"
+  },
+  "devDependencies": {
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "de.lingopingo.app",
+    "productName": "LingoPingo",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../public",
+        "to": "public",
+        "filter": [
+          "**/*",
+          "!download/**"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "LingoPingo",
+      "artifactName": "LingoPingo-Setup-${version}.${ext}"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "TherapyCenter",
+        "repo": "lingopingo",
+        "releaseType": "release"
+      }
+    ]
+  },
+  "allowScripts": {
+    "electron@33.4.11": true
+  }
+}

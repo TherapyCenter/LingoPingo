@@ -1,5 +1,5 @@
 export default {
-  langs: { de: 'Njemački', en: 'Engleski', es: 'Španjolski', fr: 'Francuski', it: 'Talijanski', hr: 'Hrvatski', tr: 'Turski', zh: 'Kineski' },
+  langs: { de: 'Njemački', en: 'Engleski', es: 'Španjolski', fr: 'Francuski', it: 'Talijanski', hr: 'Hrvatski', tr: 'Turski', zh: 'Kineski', ja: 'Japanski' },
   leagues: ['Bronca', 'Srebro', 'Zlato', 'Safir', 'Rubin', 'Dijamant'],
   ach: {
     first: ['Prvi korak', 'Završi svoju prvu lekciju'],
@@ -45,6 +45,11 @@ export default {
     tech: ['Tehnologija', 'Mnoge tehničke riječi su međunarodne – ali ne sve!'],
     sports: ['Sport', 'Navijaj za svoj tim na novom jeziku.'],
     party: ['Slavlja', 'Čestitke su ustaljeni izrazi – nauči ih napamet.'],
+    produce: ['Voće i povrće', 'Isprobaj ove riječi odmah na tržnici.'],
+    zoo: ['U zoološkom vrtu', 'Imena životinja često su međunarodna – ali ne uvijek!'],
+    vacation: ['Odmor', 'Putovnica, karta, kofer – s ovim riječima putovanje počinje.'],
+    opposites: ['Suprotnosti', 'Uči riječi u parovima: vruće i hladno lakše se pamte zajedno.'],
+    seasons: ['Godišnja doba', 'Jednom mjesečno izgovori datum na novom jeziku.'],
   },
   s: {
     tagline: 'Učenje jezika – lako kao igra!',
@@ -181,7 +186,9 @@ export default {
     newWord: 'NOVA RIJEČ',
     inLang: '{lang} …', translationIn: 'Prijevod ({lang}) …',
     pinyinPh: 'Pinyin ili znakovi … (tonovi neobavezni)',
+    romajiPh: 'Romaji ili kana … (dugi samoglasnici neobavezni)',
     missingVoice: '🔈 Na ovom uređaju nije instaliran glas za jezik: {lang} – zato izgovor zvuči pogrešno.<br><small>Android: Postavke → Pretvaranje teksta u govor → Instaliraj glasovne podatke. iPhone: Postavke → Pristupačnost → Izgovoreni sadržaj → Glasovi.</small>',
     sameLanguage: 'To je tvoj jezik – odaberi neki drugi.',
+    voiceWin: 'Windows: Postavke → Vrijeme i jezik → Jezik i regija → Dodaj jezik (s pretvaranjem teksta u govor).',
   },
 };

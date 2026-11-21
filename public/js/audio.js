@@ -73,6 +73,8 @@ if (window.speechSynthesis) {
 // (Android WebView has no Web Speech API).
 const AB = window.LingoAndroid || null;
 export const isAndroidApp = !!AB;
+// Windows app (Electron): speech output works, speech recognition does not
+export const isDesktopApp = !!window.LingoDesktop;
 const tagOf = (lang) => LANGS[lang]?.tts || lang;
 const abCalls = {};
 let abSeq = 0;
@@ -190,7 +192,7 @@ function speakNow(text, lang, { slow = false } = {}) {
 
 // ---------- Spracherkennung ----------
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-export const recognitionSupported = () => (AB ? AB.sttAvailable() : !!SR && window.isSecureContext);
+export const recognitionSupported = () => (AB ? AB.sttAvailable() : !isDesktopApp && !!SR && window.isSecureContext);
 
 export function listen(lang, { onStart } = {}) {
   if (AB) {

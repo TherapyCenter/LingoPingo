@@ -8,10 +8,11 @@ import it from './i18n/it.js';
 import hr from './i18n/hr.js';
 import tr from './i18n/tr.js';
 import zh from './i18n/zh.js';
+import ja from './i18n/ja.js';
 
-const PACKS = { de, en, es, fr, it, hr, tr, zh };
+const PACKS = { de, en, es, fr, it, hr, tr, zh, ja };
 export const UI_LANGS = Object.keys(PACKS);
-const LOCALES = { de: 'de-DE', en: 'en-GB', es: 'es-ES', fr: 'fr-FR', it: 'it-IT', hr: 'hr-HR', tr: 'tr-TR', zh: 'zh-CN' };
+const LOCALES = { de: 'de-DE', en: 'en-GB', es: 'es-ES', fr: 'fr-FR', it: 'it-IT', hr: 'hr-HR', tr: 'tr-TR', zh: 'zh-CN', ja: 'ja-JP' };
 // languages whose language names are written in lower case inside a sentence
 const LOWER_IN_SENTENCE = new Set(['es', 'fr', 'it', 'hr']);
 const LS_UI = 'lingopingo.ui';

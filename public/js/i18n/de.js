@@ -1,6 +1,6 @@
 // German UI texts (reference). Unit titles/tips come from course.js.
 export default {
-  langs: { de: 'Deutsch', en: 'Englisch', es: 'Spanisch', fr: 'Französisch', it: 'Italienisch', hr: 'Kroatisch', tr: 'Türkisch', zh: 'Chinesisch' },
+  langs: { de: 'Deutsch', en: 'Englisch', es: 'Spanisch', fr: 'Französisch', it: 'Italienisch', hr: 'Kroatisch', tr: 'Türkisch', zh: 'Chinesisch', ja: 'Japanisch' },
   leagues: ['Bronze', 'Silber', 'Gold', 'Saphir', 'Rubin', 'Diamant'],
   ach: {
     first: ['Erster Schritt', 'Schließe deine erste Lektion ab'],
@@ -153,7 +153,9 @@ export default {
     newWord: 'NEUES WORT',
     inLang: 'Auf {lang} …', translationIn: 'Übersetzung auf {lang} …',
     pinyinPh: 'Pinyin oder Zeichen … (Töne optional)',
+    romajiPh: 'Romaji oder Kana … (lange Vokale optional)',
     missingVoice: '🔈 Auf diesem Gerät ist keine {lang}-Stimme installiert – die Aussprache klingt deshalb falsch.<br><small>Android: Einstellungen → Text-in-Sprache → Sprachdaten installieren. iPhone: Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen.</small>',
     sameLanguage: 'Das ist deine eigene Sprache – wähle eine andere.',
+    voiceWin: 'Windows: Einstellungen → Zeit & Sprache → Sprache & Region → Sprache hinzufügen (mit Sprachausgabe).',
   },
 };

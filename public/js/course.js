@@ -5,6 +5,7 @@ import IT from './lang/it.js';
 import FR from './lang/fr.js';
 import TR from './lang/tr.js';
 import ZH from './lang/zh.js';
+import JA from './lang/ja.js';
 
 export const LANGS = {
   de: { name: 'Deutsch', native: 'Deutsch', flag: '🇩🇪', tts: 'de-DE', accents: 'äöüß' },
@@ -15,6 +16,7 @@ export const LANGS = {
   fr: { name: 'Französisch', native: 'Français', flag: '🇫🇷', tts: 'fr-FR', accents: 'àâçéèêëîïôùûœ' },
   tr: { name: 'Türkisch', native: 'Türkçe', flag: '🇹🇷', tts: 'tr-TR', accents: 'çğıİöşü' },
   zh: { name: 'Chinesisch', native: '中文', flag: '🇨🇳', tts: 'zh-CN', accents: '', cjk: true },
+  ja: { name: 'Japanisch', native: '日本語', flag: '🇯🇵', tts: 'ja-JP', accents: '', cjk: true },
 };
 
 export const UNITS = [
@@ -186,7 +188,7 @@ export const UNITS = [
       { e: '😢', de: 'traurig', es: 'triste', en: 'sad', hr: 'tužan' },
       { e: '🥱', de: 'müde', es: 'cansado', en: 'tired', hr: 'umoran' },
       { e: '🤒', de: 'krank', es: 'enfermo', en: 'sick|ill', hr: 'bolestan' },
-      { e: '🐘', de: 'groß', es: 'grande', en: 'big|large', hr: 'velik|veliki' },
+      { e: '🏔️', de: 'groß', es: 'grande', en: 'big|large', hr: 'velik|veliki' },
       { e: '🐜', de: 'klein', es: 'pequeño', en: 'small|little', hr: 'malen|mali' },
       { e: '🌸', de: 'schön', es: 'bonito|hermoso', en: 'beautiful|pretty', hr: 'lijep' },
       { e: '✨', de: 'neu', es: 'nuevo', en: 'new', hr: 'nov|novi' },
@@ -558,10 +560,110 @@ export const UNITS = [
       { de: 'Kommst du am Samstag zu meiner Party?', es: '¿Vienes a mi fiesta el sábado?', en: 'Are you coming to my party on Saturday?|Will you come to my party on Saturday?', hr: 'Dolaziš li u subotu na moju zabavu?|Dolaziš li na moju zabavu u subotu?' },
     ],
   },
+  {
+    id: 'produce', title: 'Obst & Gemüse', icon: '🥕', color: '#58cc02',
+    tip: 'Auf dem Markt kannst du diese Wörter sofort ausprobieren.',
+    words: [
+      { e: '🍓', de: 'Erdbeere', es: 'fresa', en: 'strawberry', hr: 'jagoda' },
+      { e: '🍇', de: 'Traube', es: 'uva', en: 'grape|grapes', hr: 'grožđe' },
+      { e: '🍋', de: 'Zitrone', es: 'limón', en: 'lemon', hr: 'limun' },
+      { e: '🍒', de: 'Kirsche', es: 'cereza', en: 'cherry', hr: 'trešnja' },
+      { e: '🥔', de: 'Kartoffel', es: 'patata|papa', en: 'potato', hr: 'krumpir' },
+      { e: '🥕', de: 'Karotte', es: 'zanahoria', en: 'carrot', hr: 'mrkva' },
+      { e: '🧅', de: 'Zwiebel', es: 'cebolla', en: 'onion', hr: 'luk' },
+      { e: '🥒', de: 'Gurke', es: 'pepino', en: 'cucumber', hr: 'krastavac' },
+    ],
+    sentences: [
+      { de: 'Ich mag Erdbeeren.', es: 'Me gustan las fresas.', en: 'I like strawberries.', hr: 'Volim jagode.' },
+      { de: 'Die Zitrone ist sauer.', es: 'El limón es ácido.|El limón está ácido.', en: 'The lemon is sour.', hr: 'Limun je kiseo.' },
+      { de: 'Wir kochen eine Suppe mit Karotten und Kartoffeln.', es: 'Cocinamos una sopa con zanahorias y patatas.|Hacemos una sopa con zanahorias y patatas.', en: 'We are cooking a soup with carrots and potatoes.|We cook a soup with carrots and potatoes.|We make a soup with carrots and potatoes.', hr: 'Kuhamo juhu s mrkvom i krumpirom.' },
+      { de: 'Obst ist gesund.', es: 'La fruta es sana.|La fruta es saludable.', en: 'Fruit is healthy.', hr: 'Voće je zdravo.' },
+    ],
+  },
+  {
+    id: 'zoo', title: 'Im Zoo', icon: '🦁', color: '#ff9600',
+    tip: 'Tiernamen sind oft international – aber nicht immer!',
+    words: [
+      { e: '🐘', de: 'Elefant', es: 'elefante', en: 'elephant', hr: 'slon' },
+      { e: '🦁', de: 'Löwe', es: 'león', en: 'lion', hr: 'lav' },
+      { e: '🐒', de: 'Affe', es: 'mono', en: 'monkey', hr: 'majmun' },
+      { e: '🦒', de: 'Giraffe', es: 'jirafa', en: 'giraffe', hr: 'žirafa' },
+      { e: '🐍', de: 'Schlange', es: 'serpiente', en: 'snake', hr: 'zmija' },
+      { e: '🐅', de: 'Tiger', es: 'tigre', en: 'tiger', hr: 'tigar' },
+      { e: '🐧', de: 'Pinguin', es: 'pingüino', en: 'penguin', hr: 'pingvin' },
+      { e: '🐢', de: 'Schildkröte', es: 'tortuga', en: 'turtle|tortoise', hr: 'kornjača' },
+    ],
+    sentences: [
+      { de: 'Der Elefant ist sehr groß.', es: 'El elefante es muy grande.', en: 'The elephant is very big.', hr: 'Slon je jako velik.|Slon je vrlo velik.' },
+      { de: 'Der Löwe schläft unter einem Baum.', es: 'El león duerme debajo de un árbol.', en: 'The lion is sleeping under a tree.|The lion sleeps under a tree.', hr: 'Lav spava ispod drveta.|Lav spava pod drvetom.' },
+      { de: 'Affen essen gern Bananen.', es: 'A los monos les gustan los plátanos.|A los monos les gusta comer plátanos.', en: 'Monkeys like eating bananas.|Monkeys like bananas.|Monkeys like to eat bananas.', hr: 'Majmuni vole jesti banane.|Majmuni vole banane.' },
+      { de: 'Gehen wir am Sonntag in den Zoo?', es: '¿Vamos al zoo el domingo?|¿Vamos al zoológico el domingo?', en: 'Shall we go to the zoo on Sunday?', hr: 'Idemo li u nedjelju u zoološki vrt?|Idemo li u zoo u nedjelju?' },
+    ],
+  },
+  {
+    id: 'vacation', title: 'Urlaub', icon: '🧳', color: '#1cb0f6',
+    tip: 'Pass, Ticket, Koffer – mit diesen Wörtern geht die Reise los.',
+    words: [
+      { e: '🧳', de: 'Koffer', es: 'maleta', en: 'suitcase', hr: 'kofer' },
+      { e: '🛂', de: 'Reisepass', es: 'pasaporte', en: 'passport', hr: 'putovnica' },
+      { e: '✈️', de: 'Flugzeug', es: 'avión', en: 'plane|airplane|aeroplane', hr: 'avion' },
+      { e: '🎫', de: 'Fahrkarte', es: 'billete', en: 'ticket', hr: 'karta|vozna karta' },
+      { e: '🗺️', de: 'Landkarte', es: 'mapa', en: 'map', hr: 'zemljovid' },
+      { e: '⛺', de: 'Zelt', es: 'tienda de campaña|tienda', en: 'tent', hr: 'šator' },
+      { e: '🕶️', de: 'Sonnenbrille', es: 'gafas de sol', en: 'sunglasses', hr: 'sunčane naočale' },
+      { e: '🌴', de: 'Urlaub', es: 'vacaciones', en: 'holiday|vacation|holidays', hr: 'odmor|godišnji odmor' },
+    ],
+    sentences: [
+      { de: 'Mein Koffer ist zu schwer.', es: 'Mi maleta pesa demasiado.|Mi maleta es demasiado pesada.', en: 'My suitcase is too heavy.', hr: 'Moj kofer je pretežak.|Kofer mi je pretežak.' },
+      { de: 'Vergiss deinen Reisepass nicht!', es: '¡No olvides tu pasaporte!', en: "Don't forget your passport!|Do not forget your passport!", hr: 'Ne zaboravi putovnicu!|Ne zaboravi svoju putovnicu!' },
+      { de: 'Das Flugzeug fliegt um zehn Uhr ab.', es: 'El avión sale a las diez.', en: "The plane leaves at ten o'clock.|The plane leaves at ten.|The plane departs at ten.", hr: 'Avion polijeće u deset sati.|Avion polijeće u deset.' },
+      { de: 'Wir machen Urlaub am Meer.', es: 'Pasamos las vacaciones en el mar.|Estamos de vacaciones en la playa.', en: 'We are on holiday by the sea.|We are on vacation by the sea.|We are going on holiday to the sea.', hr: 'Ljetujemo na moru.|Idemo na odmor na more.' },
+    ],
+  },
+  {
+    id: 'opposites', title: 'Gegensätze', icon: '↔️', color: '#ce82ff',
+    tip: 'Lerne Wörter immer paarweise: heiß und kalt merkt man sich zusammen leichter.',
+    words: [
+      { e: '🐇', de: 'schnell', es: 'rápido', en: 'fast|quick', hr: 'brz' },
+      { e: '🐌', de: 'langsam', es: 'lento', en: 'slow', hr: 'spor' },
+      { e: '🔥', de: 'heiß', es: 'caliente', en: 'hot', hr: 'vruć' },
+      { e: '🧊', de: 'kalt', es: 'frío', en: 'cold', hr: 'hladan' },
+      { e: '🏚️', de: 'alt', es: 'viejo', en: 'old', hr: 'star' },
+      { e: '🐣', de: 'jung', es: 'joven', en: 'young', hr: 'mlad' },
+      { e: '💎', de: 'teuer', es: 'caro', en: 'expensive', hr: 'skup' },
+      { e: '👛', de: 'billig', es: 'barato', en: 'cheap', hr: 'jeftin' },
+    ],
+    sentences: [
+      { de: 'Das Auto ist schnell.', es: 'El coche es rápido.|El carro es rápido.', en: 'The car is fast.', hr: 'Auto je brz.' },
+      { de: 'Die Suppe ist zu heiß.', es: 'La sopa está demasiado caliente.', en: 'The soup is too hot.', hr: 'Juha je prevruća.' },
+      { de: 'Mein Opa ist alt, aber mein Bruder ist jung.', es: 'Mi abuelo es mayor, pero mi hermano es joven.|Mi abuelo es viejo, pero mi hermano es joven.', en: 'My grandpa is old, but my brother is young.|My grandfather is old, but my brother is young.', hr: 'Moj djed je star, ali moj brat je mlad.' },
+      { de: 'Der Zug ist langsam, aber billig.', es: 'El tren es lento, pero barato.', en: 'The train is slow, but cheap.|The train is slow but cheap.', hr: 'Vlak je spor, ali jeftin.' },
+    ],
+  },
+  {
+    id: 'seasons', title: 'Jahreszeiten', icon: '🍂', color: '#ff4b4b',
+    tip: 'Sag jeden Monat einmal das Datum in deiner neuen Sprache.',
+    words: [
+      { e: '🌱', de: 'Frühling', es: 'primavera', en: 'spring', hr: 'proljeće' },
+      { e: '🌻', de: 'Sommer', es: 'verano', en: 'summer', hr: 'ljeto' },
+      { e: '🍂', de: 'Herbst', es: 'otoño', en: 'autumn|fall', hr: 'jesen' },
+      { e: '⛄', de: 'Winter', es: 'invierno', en: 'winter', hr: 'zima' },
+      { e: '📅', np: 1, de: 'Monat', es: 'mes', en: 'month', hr: 'mjesec' },
+      { e: '🗓️', np: 1, de: 'Jahr', es: 'año', en: 'year', hr: 'godina' },
+      { e: '❄️', np: 1, de: 'Januar', es: 'enero', en: 'January', hr: 'siječanj' },
+      { e: '🎅', de: 'Dezember', es: 'diciembre', en: 'December', hr: 'prosinac' },
+    ],
+    sentences: [
+      { de: 'Im Frühling blühen die Blumen.', es: 'En primavera florecen las flores.', en: 'In spring the flowers bloom.|The flowers bloom in spring.', hr: 'U proljeće cvjeta cvijeće.' },
+      { de: 'Im Sommer gehen wir schwimmen.', es: 'En verano vamos a nadar.', en: 'In summer we go swimming.|We go swimming in summer.', hr: 'Ljeti idemo plivati.' },
+      { de: 'Mein Geburtstag ist im Dezember.', es: 'Mi cumpleaños es en diciembre.', en: 'My birthday is in December.', hr: 'Moj rođendan je u prosincu.|Rođendan mi je u prosincu.' },
+      { de: 'Ein Jahr hat zwölf Monate.', es: 'Un año tiene doce meses.', en: 'A year has twelve months.|There are twelve months in a year.', hr: 'Godina ima dvanaest mjeseci.' },
+    ],
+  },
 ];
 
 // Merge the per-language packs (lang/xx.js) into the units
-const PACKS = { it: IT, fr: FR, tr: TR, zh: ZH };
+const PACKS = { it: IT, fr: FR, tr: TR, zh: ZH, ja: JA };
 for (const [k, pack] of Object.entries(PACKS)) {
   for (const u of UNITS) {
     const p = pack[u.id];
@@ -583,7 +685,7 @@ const CJK_GAP = new RegExp(`(?<=[${CJK}])\\s+(?=[${CJK}])`, 'g');
 export const HAS_CJK = new RegExp(`[${CJK}]`);
 export const joinCjk = (s) => (s || '').replace(CJK_GAP, '');
 export const disp = (s) => joinCjk(main(s));
-// Reading aid (pinyin): the first alternative without CJK characters
+// Reading aid (pinyin/romaji): the first alternative without CJK characters
 export const reading = (s, lang) => (LANGS[lang]?.cjk ? alts(s).slice(1).find((a) => a && !HAS_CJK.test(a)) || '' : '');
 
 // Eindeutige Item-Keys für Wiederholung/Spaced Repetition
@@ -601,6 +703,7 @@ const FLAGS = {
   en: '<rect width="30" height="20" fill="#012169"/><path d="M0 0L30 20M30 0L0 20" stroke="#fff" stroke-width="4"/><path d="M0 0L30 20M30 0L0 20" stroke="#c8102e" stroke-width="1.5"/><path d="M15 0V20M0 10H30" stroke="#fff" stroke-width="6"/><path d="M15 0V20M0 10H30" stroke="#c8102e" stroke-width="3.5"/>',
   hr: '<rect width="30" height="20" fill="#171796"/><rect width="30" height="13.3" fill="#fff"/><rect width="30" height="6.7" fill="#f00"/><path d="M12 5.5h6v6.5a3 3 0 0 1-6 0z" fill="#fff" stroke="#f00" stroke-width=".4"/><path d="M12 5.5h1.5v1.5H12zM15 5.5h1.5v1.5H15zM13.5 7h1.5v1.5h-1.5zM16.5 7H18v1.5h-1.5zM12 8.5h1.5V10H12zM15 8.5h1.5V10H15zM13.5 10h1.5v1.5h-1.5zM16.5 10H18v1.5h-1.5zM12 11.5h1.5V13H12zM15 11.5h1.5V13H15zM13.5 13h1.5v1.5h-1.5z" fill="#f00"/>',
   de: '<rect width="30" height="20" fill="#ffce00"/><rect width="30" height="13.4" fill="#dd0000"/><rect width="30" height="6.7" fill="#000"/>',
+  ja: '<rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="6" fill="#bc002d"/>',
   it: '<rect width="30" height="20" fill="#fff"/><rect width="10" height="20" fill="#009246"/><rect x="20" width="10" height="20" fill="#ce2b37"/>',
   fr: '<rect width="30" height="20" fill="#fff"/><rect width="10" height="20" fill="#0055a4"/><rect x="20" width="10" height="20" fill="#ef4135"/>',
   tr: `<rect width="30" height="20" fill="#e30a17"/><circle cx="11" cy="10" r="5" fill="#fff"/><circle cx="12.3" cy="10" r="4" fill="#e30a17"/>${star(17.6, 10, 2.3, '#fff', 36)}`,

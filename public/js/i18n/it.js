@@ -1,5 +1,5 @@
 export default {
-  langs: { de: 'Tedesco', en: 'Inglese', es: 'Spagnolo', fr: 'Francese', it: 'Italiano', hr: 'Croato', tr: 'Turco', zh: 'Cinese' },
+  langs: { de: 'Tedesco', en: 'Inglese', es: 'Spagnolo', fr: 'Francese', it: 'Italiano', hr: 'Croato', tr: 'Turco', zh: 'Cinese', ja: 'Giapponese' },
   leagues: ['Bronzo', 'Argento', 'Oro', 'Zaffiro', 'Rubino', 'Diamante'],
   ach: {
     first: ['Primo passo', 'Completa la tua prima lezione'],
@@ -45,6 +45,11 @@ export default {
     tech: ['Tecnologia', 'Molte parole tecniche sono internazionali, ma non tutte!'],
     sports: ['Sport', 'Fai il tifo per la tua squadra in una nuova lingua.'],
     party: ['Feste', 'Gli auguri sono formule fisse: imparale a memoria.'],
+    produce: ['Frutta e verdura', 'Prova subito queste parole al mercato.'],
+    zoo: ['Allo zoo', 'I nomi degli animali sono spesso internazionali, ma non sempre!'],
+    vacation: ['Vacanze', 'Passaporto, biglietto, valigia: con queste parole il viaggio comincia.'],
+    opposites: ['Contrari', 'Impara le parole a coppie: caldo e freddo si ricordano meglio insieme.'],
+    seasons: ['Stagioni', 'Una volta al mese di\' la data nella nuova lingua.'],
   },
   s: {
     tagline: 'Imparare le lingue giocando!',
@@ -181,7 +186,9 @@ export default {
     newWord: 'PAROLA NUOVA',
     inLang: 'In {lang}…', translationIn: 'Traduzione in {lang}…',
     pinyinPh: 'Pinyin o caratteri… (toni facoltativi)',
+    romajiPh: 'Romaji o kana… (vocali lunghe facoltative)',
     missingVoice: '🔈 Su questo dispositivo non è installata una voce ({lang}), quindi la pronuncia suona sbagliata.<br><small>Android: Impostazioni → Sintesi vocale → Installa dati vocali. iPhone: Impostazioni → Accessibilità → Contenuto letto ad alta voce → Voci.</small>',
     sameLanguage: 'È la tua lingua: scegline un\'altra.',
+    voiceWin: 'Windows: Impostazioni → Data/ora e lingua → Lingua e area geografica → Aggiungi una lingua (con sintesi vocale).',
   },
 };

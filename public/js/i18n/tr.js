@@ -1,5 +1,5 @@
 export default {
-  langs: { de: 'Almanca', en: 'İngilizce', es: 'İspanyolca', fr: 'Fransızca', it: 'İtalyanca', hr: 'Hırvatça', tr: 'Türkçe', zh: 'Çince' },
+  langs: { de: 'Almanca', en: 'İngilizce', es: 'İspanyolca', fr: 'Fransızca', it: 'İtalyanca', hr: 'Hırvatça', tr: 'Türkçe', zh: 'Çince', ja: 'Japonca' },
   leagues: ['Bronz', 'Gümüş', 'Altın', 'Safir', 'Yakut', 'Elmas'],
   ach: {
     first: ['İlk adım', 'İlk dersini bitir'],
@@ -45,6 +45,11 @@ export default {
     tech: ['Teknoloji', 'Birçok teknoloji kelimesi uluslararasıdır – ama hepsi değil!'],
     sports: ['Spor', 'Takımını yeni bir dilde destekle.'],
     party: ['Kutlamalar', 'Kutlama dilekleri kalıp ifadelerdir – onları ezberle.'],
+    produce: ['Meyve ve sebze', 'Bu kelimeleri hemen pazarda dene.'],
+    zoo: ['Hayvanat bahçesinde', 'Hayvan adları çoğu zaman uluslararasıdır – ama her zaman değil!'],
+    vacation: ['Tatil', 'Pasaport, bilet, bavul – bu kelimelerle yolculuk başlar.'],
+    opposites: ['Zıt anlamlılar', 'Kelimeleri çiftler hâlinde öğren: sıcak ve soğuk birlikte daha kolay akılda kalır.'],
+    seasons: ['Mevsimler', 'Ayda bir kez tarihi yeni dilde söyle.'],
   },
   s: {
     tagline: 'Dil öğrenmek – oyun kadar kolay!',
@@ -181,7 +186,9 @@ export default {
     newWord: 'YENİ KELİME',
     inLang: '{lang} …', translationIn: 'Çeviri ({lang}) …',
     pinyinPh: 'Pinyin veya karakterler … (tonlar isteğe bağlı)',
+    romajiPh: 'Romaji veya kana … (uzun ünlüler isteğe bağlı)',
     missingVoice: '🔈 Bu cihazda şu dil için ses yüklü değil: {lang} – bu yüzden telaffuz yanlış duyuluyor.<br><small>Android: Ayarlar → Metin okuma → Ses verilerini yükle. iPhone: Ayarlar → Erişilebilirlik → Seslendirilen İçerik → Sesler.</small>',
     sameLanguage: 'Bu senin kendi dilin – başka bir dil seç.',
+    voiceWin: 'Windows: Ayarlar → Saat ve dil → Dil ve bölge → Dil ekle (metin okuma ile).',
   },
 };
