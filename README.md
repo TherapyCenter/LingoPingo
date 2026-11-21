@@ -10,8 +10,8 @@ Mobile-first, runs in the browser, in Docker, as an **Android app** and as a **W
 
 | Platform | How |
 |---|---|
-| 📱 **Android** | [LingoPingo.apk](https://github.com/TherapyCenter/lingopingo/releases/latest/download/LingoPingo.apk) – open it on your phone and allow installing from unknown sources |
-| 🪟 **Windows** | `LingoPingo-Setup-x.y.z.exe` from the [latest release](https://github.com/TherapyCenter/lingopingo/releases/latest) – the app checks for updates and offers to install them |
+| 📱 **Android** | [LingoPingo.apk](https://github.com/TherapyCenter/LingoPingo/releases/latest/download/LingoPingo.apk) – open it on your phone and allow installing from unknown sources |
+| 🪟 **Windows** | `LingoPingo-Setup-x.y.z.exe` from the [latest release](https://github.com/TherapyCenter/LingoPingo/releases/latest) – the app checks for updates and offers to install them |
 | 🌐 **Browser / server** | `docker compose up -d --build`, see below |
 
 > The Windows installer is not code-signed, so Windows SmartScreen may show a warning: *More info → Run anyway*.

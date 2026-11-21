@@ -12,11 +12,11 @@
     "dist": "electron-builder --win --publish never"
   },
   "dependencies": {
-    "electron-updater": "^6.3.9"
+    "electron-updater": "6.8.11"
   },
   "devDependencies": {
-    "electron": "^33.2.1",
-    "electron-builder": "^25.1.8"
+    "electron": "45.4.1",
+    "electron-builder": "26.18.0"
   },
   "build": {
     "appId": "de.lingopingo.app",
@@ -64,12 +64,12 @@
       {
         "provider": "github",
         "owner": "TherapyCenter",
-        "repo": "lingopingo",
+        "repo": "LingoPingo",
         "releaseType": "release"
       }
     ]
   },
   "allowScripts": {
-    "electron@33.4.11": true
+    "electron@45.4.1": true
   }
 }
