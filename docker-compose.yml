@@ -1,0 +1,15 @@
+services:
+  lingopingo:
+    build: .
+    container_name: lingopingo
+    restart: unless-stopped
+    ports:
+      - "8080:8080"   # http://localhost:8080
+      - "8443:8443"   # https://<rechner-ip>:8443 (für Mikrofon auf dem Handy)
+    volumes:
+      - lingopingo-data:/data
+    environment:
+      - ENABLE_HTTPS=1
+
+volumes:
+  lingopingo-data:
