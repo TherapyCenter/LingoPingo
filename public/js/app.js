@@ -1,6 +1,6 @@
 import { LANGS, UNITS, LESSONS_PER_UNIT, main, itemsOfUnit, flag } from './course.js';
 import * as store from './store.js';
-import { sfx, speak, listen, setSoundEnabled, setSpeechRate, ttsSupported, recognitionSupported, hasVoice } from './audio.js';
+import { sfx, speak, listen, setSoundEnabled, setSpeechRate, ttsSupported, recognitionSupported, hasVoice, voiceName, ensureVoices } from './audio.js';
 import { buildSession, makeExercise, checkText, similarity, tokens, shuffle, norm, unitLessonLabel, pauseSpeaking, highestUnit } from './lesson.js';
 import { mascot } from './mascot.js';
 import { confetti } from './fx.js';
@@ -321,6 +321,14 @@ function profileTab() {
       <label class="range"><span>🎯 Tagesziel</span><select data-goal>${[10, 20, 30, 50, 80].map((g) => `<option value="${g}" ${P.dailyGoal === g ? 'selected' : ''}>${g} XP ${['(Locker)', '(Normal)', '(Ernsthaft)', '(Intensiv)', '(Wahnsinn)'][[10, 20, 30, 50, 80].indexOf(g)]}</option>`).join('')}</select></label>
       ${!recognitionSupported() ? `<p class="muted small">Sprechaufgaben brauchen Chrome, Edge oder Safari und eine sichere Verbindung (https oder localhost).</p>` : ''}
     </div>
+    <div class="card voices"><h3>🔊 Aussprache testen</h3>
+      ${!ttsSupported() ? '<p class="muted">Dieser Browser unterstützt keine Sprachausgabe.</p>' : Object.entries(LANGS).map(([k, l]) => {
+        const vn = voiceName(k);
+        return `<div class="voice-row">${flag(k, 28)}<div><b>${l.name}</b><small class="${vn ? 'muted' : 'warn'}">${vn ? esc(vn) : 'Keine passende Stimme gefunden – Systemstimme wird versucht'}</small></div>
+          <button class="btn small" data-vtest="${k}">▶ Test</button></div>`;
+      }).join('')}
+      <p class="muted small">Nichts zu hören? Lautstärke prüfen (beim iPhone auch den Stumm-Schalter). Fehlende Stimmen installierst du in den Geräte-Einstellungen unter Sprache/Text-in-Sprache.</p>
+    </div>
     <div class="btn-col">
       <button class="btn" data-act="courses">${flag(lang(), 26)} Sprache wechseln</button>
       <button class="btn" data-act="switch">👥 Profil wechseln</button>
@@ -330,6 +338,7 @@ function profileTab() {
 function bindProfile() {
   $$('[data-set]').forEach((i) => i.onchange = () => { P.settings[i.dataset.set] = i.checked; applySettings(); store.save(P); sfx.tap(); });
   const r = $('[data-rate]'); if (r) r.onchange = () => { P.settings.rate = +r.value; applySettings(); store.save(P); say(main(UNITS[0].sentences[0][lang()])); };
+  $$('[data-vtest]').forEach((b) => b.onclick = () => speak(main(UNITS[0].sentences[0][b.dataset.vtest]), b.dataset.vtest));
   const g = $('[data-goal]'); if (g) g.onchange = () => { P.dailyGoal = +g.value; store.save(P); toast('🎯 Tagesziel gespeichert'); };
 }
 
@@ -402,6 +411,7 @@ function startSession(opts) {
   if (!sess || !sess.queue.length) return toast('Hierfür gibt es noch nichts zu üben – mach zuerst eine Lektion!');
   if (opts.mode === 'speak' && !sess.queue.some((e) => e.type === 'speak')) return toast('Sprechübungen sind gerade nicht verfügbar.');
   S = sess;
+  warnMissingVoice();
   S.usesHearts = usesHearts;
   renderLessonShell();
   if (S.timeLimit) startTurboClock();
@@ -916,3 +926,14 @@ setInterval(() => { if (P && !S) { const before = P.hearts; store.refreshHearts(
 
 // Für Debugging in der Konsole
 window.lingopingo = { get profile() { return P; }, get session() { return S; }, norm, tokens, shuffle, highestUnit };
+
+// Einmal pro Sitzung warnen, wenn das Gerät keine Stimme für die Lernsprache hat
+let voiceWarned = false;
+function warnMissingVoice() {
+  if (voiceWarned || !ttsSupported() || !P.settings.tts) return;
+  ensureVoices().then(() => {
+    if (voiceWarned || hasVoice(lang())) return;
+    voiceWarned = true;
+    toast(`🔈 Auf diesem Gerät ist keine ${L().name}-Stimme installiert – die Aussprache klingt deshalb falsch.<br><small>Android: Einstellungen → Text-in-Sprache → Sprachdaten installieren → ${L().name}. iPhone: Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen.</small>`, 9000);
+  });
+}

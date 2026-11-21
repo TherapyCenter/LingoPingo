@@ -80,23 +80,78 @@ export function voiceFor(lang) {
     (/natural|online|google|premium|enhanced/i.test(v.name) ? 1 : 0);
   return list.sort((a, b) => score(b) - score(a))[0] || null;
 }
-export const hasVoice = (lang) => !!voiceFor(lang);
+export const hasVoice = (lang) => { if (!voices.length) loadVoices(); return !!voiceFor(lang); };
+export const voiceName = (lang) => { if (!voices.length) loadVoices(); return voiceFor(lang)?.name || null; };
 
 let speechRate = 0.95;
 export const setSpeechRate = (r) => { speechRate = r; };
 
-export function speak(text, lang, { slow = false } = {}) {
-  if (!window.speechSynthesis || !text) return Promise.resolve();
+// Mobile Browser (v. a. iOS) geben Ton/Sprache erst frei, nachdem sie einmal
+// direkt in einer Nutzer-Geste gestartet wurden. Beim ersten Tippen entsperren.
+let unlocked = false;
+function unlockAudio() {
+  if (unlocked) return;
+  unlocked = true;
+  try { ac(); } catch { /* kein WebAudio */ }
+  const s = window.speechSynthesis;
+  if (s) {
+    try {
+      const u = new SpeechSynthesisUtterance(' ');
+      u.volume = 0;
+      s.speak(u);
+    } catch { /* ignorieren */ }
+  }
+  ['pointerdown', 'touchend', 'keydown'].forEach((e) => window.removeEventListener(e, unlockAudio, true));
+}
+if (typeof window.addEventListener === 'function') {
+  ['pointerdown', 'touchend', 'keydown'].forEach((e) => window.addEventListener(e, unlockAudio, true));
+}
+
+let currentUtterance = null; // Referenz halten, sonst bricht Chrome/Android manchmal ab
+
+// Chrome/Android liefert die Stimmen verzögert. Ohne gesetzte Stimme ignoriert
+// Android die Sprache und liest mit der Standardstimme (meist Deutsch) vor.
+let voicesReady = null;
+export function ensureVoices() {
+  if (!window.speechSynthesis) return Promise.resolve();
+  loadVoices();
+  if (voices.length) return Promise.resolve();
+  if (!voicesReady) {
+    voicesReady = new Promise((resolve) => {
+      const t0 = Date.now();
+      const poll = () => {
+        loadVoices();
+        if (voices.length || Date.now() - t0 > 2000) { voicesReady = null; resolve(); }
+        else setTimeout(poll, 100);
+      };
+      poll();
+    });
+  }
+  return voicesReady;
+}
+
+export async function speak(text, lang, opts = {}) {
+  if (!window.speechSynthesis || !text) return;
+  if (!voices.length) await ensureVoices();
+  return speakNow(text, lang, opts);
+}
+
+function speakNow(text, lang, { slow = false } = {}) {
+  const s = window.speechSynthesis;
   return new Promise((resolve) => {
-    window.speechSynthesis.cancel();
+    let done = false;
+    const finish = () => { if (!done) { done = true; resolve(); } };
     const u = new SpeechSynthesisUtterance(text);
     u.lang = LANGS[lang]?.tts || lang;
     const v = voiceFor(lang);
     if (v) u.voice = v;
     u.rate = slow ? 0.6 : speechRate;
-    u.onend = u.onerror = () => resolve();
-    window.speechSynthesis.speak(u);
-    setTimeout(resolve, 8000);
+    u.onend = u.onerror = finish;
+    currentUtterance = u;
+    const start = () => { s.resume(); s.speak(u); };
+    // cancel() direkt gefolgt von speak() verschluckt auf Android oft die Ausgabe
+    if (s.speaking || s.pending) { s.cancel(); setTimeout(start, 80); } else start();
+    setTimeout(finish, 8000);
   });
 }
 
