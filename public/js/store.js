@@ -176,9 +176,13 @@ export function setServerUrl(u) {
   return u;
 }
 const api = (path) => serverUrl() + '/api/profiles' + path;
+// No own server (GitHub Pages, Android/Windows/iPhone app without a configured server): don't call the API at all
+const serverless = () => !serverUrl() && typeof location !== 'undefined' && (location.protocol === 'app:' || location.hostname.endsWith('github.io') ||
+  location.hostname === 'appassets.androidplatform.net');
 
 export async function listProfiles() {
   const local = Object.values(lsAll()).map((p) => ({ name: p.name, avatar: p.avatar, xp: p.xp, level: p.level, streak: p.streak, weekXp: p.weekXp, weekId: p.weekId, updatedAt: p.updatedAt || 0 }));
+  if (serverless()) { serverOnline = false; return local; }
   try {
     const r = await fetch(api(''));
     if (!r.ok) throw new Error();
@@ -203,6 +207,7 @@ function migrate(p) {
 
 export async function loadProfile(name) {
   const local = lsAll()[name.toLowerCase()];
+  if (serverless()) return local ? migrate(local) : null;
   try {
     const r = await fetch(api('/' + encodeURIComponent(name)));
     if (r.ok) {
@@ -220,6 +225,7 @@ export function save(p, immediate = false) {
   lsSave(p);
   localStorage.setItem(LS_CURRENT, p.name);
   clearTimeout(syncTimer);
+  if (serverless()) return;
   const push = () => fetch(api('/' + encodeURIComponent(p.name)), {
     method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(p), keepalive: true,
   }).then(() => { serverOnline = true; }).catch(() => { serverOnline = false; });
@@ -230,6 +236,7 @@ export async function deleteProfile(name) {
   const all = lsAll(); delete all[name.toLowerCase()];
   localStorage.setItem(LS_KEY, JSON.stringify(all));
   if (localStorage.getItem(LS_CURRENT) === name) localStorage.removeItem(LS_CURRENT);
+  if (serverless()) return;
   try { await fetch(api('/' + encodeURIComponent(name)), { method: 'DELETE' }); } catch { /* offline */ }
 }
 
