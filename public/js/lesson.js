@@ -1,5 +1,5 @@
 // Erzeugt Lektionen passend zu Fortschritt & Können und prüft Antworten.
-import { UNITS, LESSONS_PER_UNIT, main, alts, itemsOfUnit } from './course.js';
+import { UNITS, LANGS, LESSONS_PER_UNIT, main, alts, itemsOfUnit } from './course.js';
 import { itemState, unitProgress, isUnitUnlocked, skillBonus } from './store.js';
 import { recognitionSupported, ttsSupported } from './audio.js';
 
@@ -136,9 +136,21 @@ function unlockedItems(p) {
 
 function optionCount(d) { return d < 2 ? 3 : d < 6 ? 4 : 5; }
 
+// Zwei Items "kollidieren", wenn sie in irgendeiner Sprache eine gleiche Übersetzung haben
+// (z. B. Arzt/Ärztin → "doctor"). Solche Paare dürfen nie gemeinsam als Optionen erscheinen.
+const FIELDS = ['de', ...Object.keys(LANGS)];
+export function conflicts(a, b) {
+  if (a.key === b.key) return true;
+  return FIELDS.some((f) => {
+    const A = alts(a[f]).map(norm), B = new Set(alts(b[f]).map(norm));
+    return A.some((x) => x && B.has(x));
+  });
+}
+
 function distractors(item, pool, n, field) {
-  const same = pool.filter((x) => x.kind === item.kind && x.key !== item.key && main(x[field]) !== main(item[field]) && x.unit === item.unit);
-  const other = pool.filter((x) => x.kind === item.kind && x.key !== item.key && main(x[field]) !== main(item[field]) && x.unit !== item.unit);
+  const ok = (x) => x.kind === item.kind && !conflicts(x, item);
+  const same = pool.filter((x) => ok(x) && x.unit === item.unit);
+  const other = pool.filter((x) => ok(x) && x.unit !== item.unit);
   const res = []; const seen = new Set([main(item[field]).toLowerCase()]);
   for (const x of [...shuffle(same), ...shuffle(other)]) {
     const v = main(x[field]).toLowerCase();
@@ -193,7 +205,11 @@ export function makeExercise(p, lang, item, type, d, pool) {
 }
 
 function matchExercise(lang, items) {
-  const words = shuffle(items.filter((x) => x.kind === 'word')).slice(0, 5);
+  const words = [];
+  for (const w of shuffle(items.filter((x) => x.kind === 'word'))) {
+    if (words.length >= 5) break;
+    if (!words.some((o) => conflicts(o, w))) words.push(w);
+  }
   return { type: 'match', lang, key: null, items: words, left: shuffle(words), right: shuffle(words) };
 }
 

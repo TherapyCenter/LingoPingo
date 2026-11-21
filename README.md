@@ -22,7 +22,7 @@ Profile und Fortschritt liegen im Volume `lingopingo-data` (`/data/profiles.json
 
 | Bereich | Was drin ist |
 |---|---|
-| **Lernpfad** | 11 Einheiten (Begrüßung, Essen, Tiere, Farben, Zahlen, Familie, Reisen, Alltag, Gefühle, Wetter, Restaurant) mit je 4 Lektionen + Meisterprüfung 👑 |
+| **Lernpfad** | 21 Einheiten (Begrüßung, Essen, Tiere, Farben, Zahlen, Familie, Reisen, Alltag, Gefühle, Wetter, Restaurant, Kleidung, Körper, Zuhause, Einkaufen, Berufe, Wochentage, Fragen, Natur, Freizeit, Beim Arzt) mit je 4 Lektionen + Meisterprüfung 👑 |
 | **Aufgabentypen** | Bild wählen, Übersetzung wählen, Hören & wählen, Paare finden, Satz aus Bausteinen bauen, Wort/Satz tippen, Diktat, Sprechen 🎤 |
 | **Steigende Schwierigkeit** | Die Schwierigkeit (0–10) ergibt sich aus Einheit, Lektion, Level und deiner Trefferquote. Sie bestimmt Aufgabentypen (von Bildkarten bis zum freien Schreiben), die Anzahl der Antwortoptionen, zusätzliche Ablenker-Bausteine und weniger Bild-Hilfen. Wer >92 % richtig hat, bekommt schwerere Aufgaben, bei vielen Fehlern wird es leichter. |
 | **Punkte** | XP mit Combo-Multiplikator (×1,5 ab 5, ×2 ab 10), Perfekt-Bonus, doppelte XP in der Prüfung, Level, Ligen (Bronze → Diamant), Tagesziel, Streak 🔥 mit Streak-Schutz, Perlen 💎, 14 Erfolge |
