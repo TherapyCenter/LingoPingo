@@ -173,7 +173,8 @@ h1, h2, h3 { margin: .3em 0; font-weight: 800; }
 .rank-row .rn small { color: var(--muted); font-weight: 600; }
 
 .profile-head { display: flex; align-items: center; gap: 16px; margin-top: 14px; }
-.big-av { font-size: 3.4rem; width: 86px; height: 86px; border-radius: 50%; display: grid; place-items: center; background: var(--bg2); border: 3px dashed var(--line-d); }
+.pin-in { font-size: 1.6rem; text-align: center; letter-spacing: .4em; margin: 6px 0 14px; }
+.big-av { cursor: default; -webkit-tap-highlight-color: transparent; user-select: none;  font-size: 3.4rem; width: 86px; height: 86px; border-radius: 50%; display: grid; place-items: center; background: var(--bg2); border: 3px dashed var(--line-d); }
 .lvl-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
 .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .stat { border: 2px solid var(--line); border-radius: 14px; padding: 12px; display: grid; grid-template-columns: auto 1fr; column-gap: 10px; align-items: center; }
@@ -267,9 +268,6 @@ h1, h2, h3 { margin: .3em 0; font-weight: 800; }
 .tile { border: 2px solid var(--line); border-bottom-width: 4px; border-radius: 12px; background: var(--card); padding: 9px 14px; font-size: 1.05rem; font-weight: 700; animation: tilein .18s; }
 .tile.used { visibility: hidden; }
 .tile { position: relative; }
-.tile:has(.tspk) { padding-right: 28px; }
-.tile .tspk { position: absolute; top: 2px; right: 4px; font-size: .7rem; line-height: 1; padding: 3px; border-radius: 8px; opacity: .55; cursor: pointer; }
-.tile .tspk:hover { opacity: 1; background: var(--line); }
 /* Japanese/Chinese tiles: word, reading and meaning stacked */
 .tile.gl { display: inline-flex; flex-direction: column; align-items: center; padding-top: 6px; padding-bottom: 6px; line-height: 1.15; max-width: 9.5em; }
 .tile.gl .tr { font-size: .66rem; font-weight: 600; opacity: .7; margin-top: 1px; }

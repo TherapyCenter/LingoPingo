@@ -184,6 +184,7 @@ function dailyGoalCard() {
 function learnTab() {
   let current = null;
   const units = UNITS.map((u, ui) => {
+    if (u.adult && !P.settings.adult) return ''; // 18+ units stay hidden until the PIN easter egg
     const prog = store.unitProgress(P, ui);
     const unlocked = store.isUnitUnlocked(P, ui);
     const nodes = Array.from({ length: LESSONS_PER_UNIT }, (_, li) => {
@@ -201,7 +202,7 @@ function learnTab() {
     const done = prog >= LESSONS_PER_UNIT;
     return `<section class="unit ${unlocked ? '' : 'locked'}" id="unit-${ui}">
       <div class="unit-head" style="--c:${u.color}">
-        <div><small>${t('unitN', { n: ui + 1 })}${done ? ' · ' + t('mastered') : ''}</small><h3>${u.icon} ${esc(unitTitle(u))}</h3></div>
+        <div><small>${u.adult ? '🔞 18+' : t('unitN', { n: ui + 1 })}${done ? ' · ' + t('mastered') : ''}</small><h3>${u.icon} ${esc(unitTitle(u))}</h3></div>
         <button class="guide-btn" data-guide="${ui}" title="${esc(t('guide'))}">📖</button>
       </div>
       <div class="path">${nodes}</div>
@@ -351,7 +352,32 @@ function profileTab() {
       <button class="btn danger-ghost" data-act="delete">${t('deleteProfile')}</button>
     </div>`;
 }
+// Easter egg: tapping the profile picture 5 times quickly asks for a PIN that shows or
+// hides the 18+ units (swearing & insults). It is a hidden switch, not a security feature.
+const ADULT_PIN = '1818';
+let avTaps = [];
+function adultEasterEgg() {
+  const now = Date.now();
+  avTaps = [...avTaps.filter((x) => now - x < 2500), now];
+  if (avTaps.length < 5) return;
+  avTaps = [];
+  const on = !!P.settings.adult;
+  modal(`<h2>🔞 ${t('pinTitle')}</h2><p class="muted">${t(on ? 'pinInfoOff' : 'pinInfoOn')}</p>
+    <input class="input pin-in" id="pin" type="password" inputmode="numeric" autocomplete="off" maxlength="8">
+    <div class="btn-col"><button class="btn primary wide" id="pinok">${t('pinOk')}</button><button class="btn wide" data-close>${t('close')}</button></div>`);
+  const inp = $('#pin');
+  setTimeout(() => inp.focus(), 50);
+  const ok = () => {
+    if (inp.value !== ADULT_PIN) { sfx.wrong(); inp.value = ''; inp.classList.add('shake'); setTimeout(() => inp.classList.remove('shake'), 500); return; }
+    P.settings.adult = !on; store.save(P, true); sfx.pop(); closeModal();
+    toast(t(on ? 'adultOff' : 'adultOn'));
+  };
+  $('#pinok').onclick = ok;
+  inp.onkeydown = (e) => { if (e.key === 'Enter') ok(); };
+}
+
 function bindProfile() {
+  const av = $('.big-av'); if (av) av.onclick = adultEasterEgg;
   $$('[data-set]').forEach((i) => i.onchange = () => { P.settings[i.dataset.set] = i.checked; applySettings(); store.save(P); sfx.tap(); });
   const r = $('[data-rate]'); if (r) r.onchange = () => { P.settings.rate = +r.value; applySettings(); store.save(P); say(main(UNITS[0].sentences[0][lang()])); };
   $$('[data-vtest]').forEach((b) => b.onclick = () => speak(main(UNITS[0].sentences[0][b.dataset.vtest]), b.dataset.vtest));
@@ -763,12 +789,11 @@ function tileBuilder(ex, box, answerStr) {
   const area = $('.answer-area', box);
   const target = answerStr !== ex.item[nat()]; // tiles are in the language being learned
   const cjk = target && T(ex).cjk;
-  // Target-language tiles get a speaker (hear the word without picking it);
-  // Japanese/Chinese tiles also show the reading (romaji/pinyin). The meaning gives the answer
+  // Tapping a target-language tile reads it out and places it. Japanese/Chinese tiles also show the reading (romaji/pinyin). The meaning gives the answer
   // away, so it is hidden unless the learner switches it on with 💡 (remembered in the profile).
   const tileHtml = (w) => {
     const g = cjk ? gloss(w, ex.lang, nat()) : null;
-    return `<span class="tw">${esc(w)}</span>${g ? `<small class="tr">${esc(g.r)}</small><small class="tm">${esc(g.m)}</small>` : ''}${target ? '<span class="tspk" aria-label="play">🔊</span>' : ''}`;
+    return `<span class="tw">${esc(w)}</span>${g ? `<small class="tr">${esc(g.r)}</small><small class="tm">${esc(g.m)}</small>` : ''}`;
   };
   const hintBtn = cjk ? `<button class="spk hint ${P.settings.glossHint ? 'on' : ''}" id="glossHint" title="${esc(t('showMeaning'))}" aria-label="${esc(t('showMeaning'))}" aria-pressed="${!!P.settings.glossHint}">💡</button>` : '';
   area.innerHTML = `${target ? `<div class="line-tools">${hintBtn}<button class="spk" id="playLine" aria-label="play">🔊</button><button class="spk slow" id="playLineSlow" aria-label="play slowly">🐢</button></div>` : ''}
@@ -784,10 +809,6 @@ function tileBuilder(ex, box, answerStr) {
   };
   const refresh = () => setReady(chosen.length > 0);
   const builtText = () => $$('.tile', line).map((x) => x.dataset.w).join(' ');
-  const bindTileSpeaker = (tile) => {
-    const s = $('.tspk', tile);
-    if (s) s.onclick = (e) => { e.stopPropagation(); sfx.tap(); say(tile.dataset.w); };
-  };
   const playLine = (btn, slow) => {
     const s = builtText();
     if (!s) return;
@@ -799,14 +820,12 @@ function tileBuilder(ex, box, answerStr) {
     $('#playLineSlow', area).onclick = (e) => playLine(e.currentTarget, true);
   }
   $$('#bank .tile', area).forEach((t) => {
-    bindTileSpeaker(t);
     t.onclick = () => {
       if (ctrl.answered || t.classList.contains('used')) return;
       sfx.pop();
       t.classList.add('used');
       const c = document.createElement('button');
       c.className = t.className.replace('used', '') + ' placed'; c.innerHTML = t.innerHTML; c.dataset.i = t.dataset.i; c.dataset.w = t.dataset.w;
-      bindTileSpeaker(c);
       c.onclick = () => { if (ctrl.answered) return; sfx.tap(); c.remove(); t.classList.remove('used'); chosen.splice(chosen.indexOf(+c.dataset.i), 1); refresh(); };
       line.appendChild(c);
       chosen.push(+t.dataset.i);

@@ -180,9 +180,10 @@ function weightedType(types, d, s) {
 }
 
 // Pool aller Wörter/Sätze aus freigeschalteten Einheiten (für Ablenker)
-function unlockedItems(p) {
+// 18+ units are only used inside their own lessons, never in normal lessons or practice.
+function unlockedItems(p, withAdult = false) {
   const out = [];
-  UNITS.forEach((_, ui) => { if (isUnitUnlocked(p, ui)) out.push(...itemsOfUnit(ui)); });
+  UNITS.forEach((u, ui) => { if ((withAdult || !u.adult) && isUnitUnlocked(p, ui)) out.push(...itemsOfUnit(ui)); });
   return out;
 }
 
@@ -279,12 +280,14 @@ function weakFirst(p, items) {
  */
 export function buildSession(p, lang, opts) {
   const { mode, unit = 0, lesson = 0 } = opts;
-  const pool = unlockedItems(p);
+  const pool = unlockedItems(p, mode === 'lesson' && !!UNITS[unit]?.adult);
   const exam = mode === 'lesson' && lesson === LESSONS_PER_UNIT - 1;
   let d, focus, extra = [], count, only = null;
 
   if (mode === 'lesson') {
-    d = difficulty(p, unit, lesson) + (exam ? 1 : 0);
+    // 18+ units sit at the end of the list but are not harder: rank them among themselves
+    const rank = UNITS[unit].adult ? UNITS.filter((u) => u.adult).indexOf(UNITS[unit]) : unit;
+    d = difficulty(p, rank, lesson) + (exam ? 1 : 0);
     const items = itemsOfUnit(unit);
     const words = items.filter((x) => x.kind === 'word');
     const sents = items.filter((x) => x.kind === 'sentence');
@@ -345,7 +348,7 @@ export function buildSession(p, lang, opts) {
 
 export function highestUnit(p) {
   let h = 0;
-  UNITS.forEach((_, i) => { if (isUnitUnlocked(p, i)) h = i; });
+  UNITS.forEach((u, i) => { if (!u.adult && isUnitUnlocked(p, i)) h = i; });
   return h;
 }
 

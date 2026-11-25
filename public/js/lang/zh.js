@@ -67,4 +67,8 @@ export default {
     '这 辆 车 很 快。|zhè liàng chē hěn kuài|车 很 快。', '汤 太 烫 了。|tāng tài tàng le', '我 爷爷 老 了， 但是 我 哥哥 很 年轻。|wǒ yéye lǎo le, dànshì wǒ gēge hěn niánqīng', '火车 很 慢， 但是 很 便宜。|huǒchē hěn màn, dànshì hěn piányi'],
   seasons: ['春天|chūntiān|春', '夏天|xiàtiān|夏', '秋天|qiūtiān|秋', '冬天|dōngtiān|冬', '月|yuè|月份', '年|nián', '一月|yīyuè', '十二月|shíèryuè',
     '春天 花 开 了。|chūntiān huā kāi le', '夏天 我们 去 游泳。|xiàtiān wǒmen qù yóuyǒng', '我的 生日 在 十二月。|wǒ de shēngrì zài shíèryuè', '一 年 有 十二 个 月。|yì nián yǒu shíèr gè yuè'],
+  curse: ['妈的|mā de|靠|卧槽', '该死|gāisǐ|见鬼', '闭嘴|bì zuǐ', '滚|gǔn|滚开|滚蛋', '去你的|qù nǐ de', '搞什么鬼|gǎo shénme guǐ|什么鬼', '去你妈的|qù nǐ mā de', '我才不在乎|wǒ cái bú zàihu|关我屁事',
+    '妈的， 我 错过 了 公交车！|mā de, wǒ cuòguò le gōngjiāochē|靠， 我 错过 了 公交车！', '该死， 我的 手机 坏 了！|gāisǐ, wǒ de shǒujī huài le', '闭嘴， 听 我 说！|bì zuǐ, tīng wǒ shuō', '你 到底 在 干 什么？|nǐ dàodǐ zài gàn shénme|你 在 搞 什么 鬼？'],
+  insults: ['白痴|báichī|笨蛋', '混蛋|húndàn|浑蛋', '傻瓜|shǎguā|傻子', '王八蛋|wángbādàn', '人渣|rénzhā', '胆小鬼|dǎnxiǎoguǐ|懦夫', '骗子|piànzi', '疯子|fēngzi|神经病',
+    '你 真 是 个 白痴！|nǐ zhēn shì ge báichī|你 真 笨！', '别 烦 我， 你 这个 混蛋！|bié fán wǒ, nǐ zhège húndàn|别 烦 我， 混蛋！', '他 真 是 个 王八蛋。|tā zhēn shì ge wángbādàn', '别 当 胆小鬼！|bié dāng dǎnxiǎoguǐ|别 做 胆小鬼！'],
 };

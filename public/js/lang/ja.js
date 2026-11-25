@@ -68,4 +68,8 @@ export default {
     'その 車 は 速い です。|sono kuruma wa hayai desu|車 は 速い です。', 'スープ は 熱すぎます。|sūpu wa atsusugimasu', '祖父 は 年 を とって います が、 兄 は 若い です。|sofu wa toshi o totte imasu ga, ani wa wakai desu', '電車 は 遅い です が、 安い です。|densha wa osoi desu ga, yasui desu'],
   seasons: ['春|haru', '夏|natsu', '秋|aki', '冬|fuyu', '月|tsuki|一か月', '年|toshi|nen|一年', '一月|ichigatsu', '十二月|jūnigatsu',
     '春 に は 花 が 咲きます。|haru ni wa hana ga sakimasu', '夏 は 泳ぎ に 行きます。|natsu wa oyogi ni ikimasu', '私 の 誕生日 は 十二月 です。|watashi no tanjōbi wa jūnigatsu desu', '一年 は 十二か月 です。|ichinen wa jūnikagetsu desu'],
+  curse: ['くそ|kuso|クソ', 'ちくしょう|chikushō|くそったれ', '黙れ|damare|だまれ|うるさい', '消えろ|kiero|失せろ|うせろ', 'くたばれ|kutabare', '何だよ|nanda yo|なんだよ', 'ふざけるな|fuzakeru na|ふざけんな', 'どうでもいい|dōdemo ii|知るか',
+    'くそ、 バス に 乗り遅れた！|kuso, basu ni noriokureta', 'ちくしょう、 スマホ が 壊れた！|chikushō, sumaho ga kowareta', '黙って 聞け！|damatte kike', '一体 何 を して いる ん だ？|ittai nani o shite iru n da'],
+  insults: ['バカ|baka|馬鹿|ばか', 'クソ野郎|kusoyarō|くそやろう', 'アホ|aho|あほ|間抜け', 'ろくでなし|rokudenashi', 'クズ|kuzu|くず', '臆病者|okubyōmono|弱虫', '嘘つき|usotsuki|うそつき', '変人|henjin|変わり者',
+    'お前 は 本当 に バカ だ な！|omae wa hontō ni baka da na|本当 に バカ だ ね！', 'ほっといて くれ、 クソ野郎！|hottoite kure, kusoyarō|ほっといて、 クソ野郎！', 'あいつ は 本当 に ろくでなし だ。|aitsu wa hontō ni rokudenashi da', '怖がる な！|kowagaru na|ビビる な！'],
 };

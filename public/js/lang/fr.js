@@ -65,4 +65,8 @@ export default {
     'La voiture est rapide.', 'La soupe est trop chaude.', 'Mon grand-père est vieux, mais mon frère est jeune.|Mon papi est vieux, mais mon frère est jeune.', 'Le train est lent, mais pas cher.|Le train est lent mais bon marché.'],
   seasons: ['printemps', 'été', 'automne', 'hiver', 'mois', 'année|an', 'janvier', 'décembre',
     'Au printemps, les fleurs fleurissent.', 'En été, nous allons nager.|En été, on va nager.', 'Mon anniversaire est en décembre.', 'Une année a douze mois.|Un an a douze mois.'],
+  curse: ['merde', 'putain|bon sang', 'ta gueule|ferme-la|tais-toi', 'casse-toi|dégage', 'va te faire voir', "c'est quoi ce bordel|que diable", 'va te faire foutre', "je m'en fous|j'en ai rien à foutre",
+    "Merde, j'ai raté le bus !", 'Putain, mon portable est cassé !|Bon sang, mon portable est cassé !', 'Ferme-la et écoute-moi !|Tais-toi et écoute-moi !', "Qu'est-ce que tu fous ?|Qu'est-ce que tu fais, bordel ?"],
+  insults: ['idiot|crétin', 'connard|trou du cul', 'imbécile|abruti', 'salaud|enfoiré', 'branleur', 'lâche|trouillard|poule mouillée', 'menteur|menteuse', 'cinglé|taré|fou',
+    "T'es vraiment un idiot !|Tu es vraiment idiot !|Tu es un idiot !", 'Laisse-moi tranquille, connard !|Fous-moi la paix, connard !', "C'est un vrai salaud.", 'Ne sois pas lâche !|Sois pas lâche !'],
 };

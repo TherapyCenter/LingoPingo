@@ -98,7 +98,10 @@ export function checkStreak(p) {
 
 // ---------- Fortschritt ----------
 export const unitProgress = (p, ui) => course(p).progress[UNITS[ui].id] || 0;
-export function isUnitUnlocked(p, ui) { return ui === 0 || unitProgress(p, ui - 1) >= LESSONS_PER_UNIT; }
+export function isUnitUnlocked(p, ui) {
+  if (UNITS[ui].adult) return !!p.settings?.adult; // 18+ units: only after the PIN easter egg
+  return ui === 0 || unitProgress(p, ui - 1) >= LESSONS_PER_UNIT;
+}
 
 // Lernstärke eines Items (0..5) – wird für Wiederholungen & Schwierigkeit genutzt
 export function itemState(p, key) { return course(p).items[key] || { s: 0, n: 0, w: 0, t: 0 }; }

@@ -674,6 +674,48 @@ export const UNITS = [
       { de: 'Ein Jahr hat zwölf Monate.', es: 'Un año tiene doce meses.', en: 'A year has twelve months.|There are twelve months in a year.', hr: 'Godina ima dvanaest mjeseci.' },
     ],
   },
+  // ---- 18+ units (hidden easter egg, unlocked with a PIN; see app.js) ----
+  // Everyday swearing and insults only: no racist, homophobic or misogynist slurs.
+  {
+    id: 'curse', adult: true, title: 'Fluchen (18+)', icon: '🤬', color: '#b3261e',
+    tip: 'Nur für Erwachsene: So fluchst du wie die Einheimischen – aber benutze es mit Vorsicht!',
+    words: [
+      { e: '💩', de: 'Scheiße', es: 'mierda', en: 'shit', hr: 'sranje|govno' },
+      { e: '😤', de: 'Verdammt|Mist', es: 'maldita sea|joder', en: 'damn|damn it', hr: 'dovraga|kvragu' },
+      { e: '🤐', de: 'Halt die Klappe|Halt den Mund', es: 'cállate|cierra la boca', en: 'shut up', hr: 'začepi|šuti' },
+      { e: '👉', de: 'Verpiss dich|Hau ab', es: 'vete a la mierda|lárgate', en: 'piss off|get lost', hr: 'odjebi|gubi se' },
+      { e: '🍑', de: 'Leck mich', es: 'que te den|vete al carajo', en: 'kiss my ass|screw you', hr: 'poljubi me u dupe' },
+      { e: '😱', de: 'Was zum Teufel', es: 'qué diablos|qué demonios', en: 'what the hell|what the heck', hr: 'koji vrag' },
+      { e: '🖕', de: 'Fick dich', es: 'jódete|que te jodan', en: 'fuck you', hr: 'jebi se' },
+      { e: '🤷', de: 'Ist mir scheißegal|Scheißegal', es: 'me importa una mierda|me la suda', en: "I don't give a shit|I don't give a damn", hr: 'boli me kurac|baš me briga' },
+    ],
+    sentences: [
+      { de: 'Scheiße, ich habe den Bus verpasst!', es: '¡Mierda, he perdido el autobús!|¡Mierda, perdí el autobús!', en: 'Shit, I missed the bus!', hr: 'Sranje, propustio sam autobus!|Sranje, propustila sam autobus!' },
+      { de: 'Verdammt, mein Handy ist kaputt!', es: '¡Maldita sea, mi móvil está roto!|¡Joder, mi móvil está roto!', en: 'Damn, my phone is broken!|Damn it, my phone is broken!', hr: 'Dovraga, mobitel mi je pokvaren!|Kvragu, mobitel mi je pokvaren!' },
+      { de: 'Halt die Klappe und hör mir zu!', es: '¡Cállate y escúchame!', en: 'Shut up and listen to me!', hr: 'Začepi i slušaj me!' },
+      { de: 'Was zum Teufel machst du da?', es: '¿Qué diablos estás haciendo?|¿Qué coño estás haciendo?', en: 'What the hell are you doing?', hr: 'Koji vrag radiš?' },
+    ],
+  },
+  {
+    id: 'insults', adult: true, title: 'Beleidigungen (18+)', icon: '😈', color: '#6d2077',
+    tip: 'Nur für Erwachsene: Damit verstehst du, wenn dich jemand beschimpft – zum Selbstgebrauch nur im Notfall.',
+    words: [
+      { e: '🤪', de: 'Idiot', es: 'idiota|imbécil', en: 'idiot', hr: 'idiot|budala' },
+      { e: '😠', de: 'Arschloch', es: 'gilipollas|capullo', en: 'asshole|arsehole', hr: 'šupak|seronja' },
+      { e: '🐴', de: 'Trottel|Depp', es: 'tonto|bobo', en: 'fool|moron', hr: 'kreten|glupan' },
+      { e: '🐀', de: 'Mistkerl', es: 'cabrón|desgraciado', en: 'bastard', hr: 'gad|kopile' },
+      { e: '✊', de: 'Wichser|Drecksack', es: 'pajero|cabronazo', en: 'wanker|jerk|scumbag', hr: 'drkadžija|drkoš' },
+      { e: '🐔', de: 'Feigling', es: 'cobarde|gallina', en: 'coward|chicken', hr: 'kukavica' },
+      { e: '🤥', de: 'Lügner|Lügnerin', es: 'mentiroso|mentirosa', en: 'liar', hr: 'lažljivac|lažov' },
+      { e: '🌀', de: 'Spinner|Spinnerin', es: 'chalado|pirado|loco', en: 'nutcase|weirdo|lunatic', hr: 'luđak|čudak' },
+    ],
+    sentences: [
+      { de: 'Du bist so ein Idiot!', es: '¡Eres tan idiota!|¡Eres un idiota!', en: "You're such an idiot!|You are such an idiot!|You are an idiot!", hr: 'Ti si takav idiot!|Baš si idiot!' },
+      { de: 'Lass mich in Ruhe, du Arschloch!', es: '¡Déjame en paz, gilipollas!|¡Déjame en paz, capullo!', en: 'Leave me alone, you asshole!|Leave me alone, asshole!', hr: 'Ostavi me na miru, šupče!|Pusti me na miru, šupče!' },
+      { de: 'Er ist ein echter Mistkerl.', es: 'Es un verdadero cabrón.|Es un auténtico cabrón.', en: 'He is a real bastard.|He\'s a real bastard.', hr: 'On je pravi gad.' },
+      { de: 'Sei kein Feigling!', es: '¡No seas cobarde!|¡No seas gallina!', en: "Don't be a coward!|Don't be a chicken!|Do not be a coward!", hr: 'Ne budi kukavica!' },
+    ],
+  },
 ];
 
 // Merge the per-language packs (lang/xx.js) into the units

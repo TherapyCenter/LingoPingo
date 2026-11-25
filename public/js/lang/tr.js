@@ -65,4 +65,8 @@ export default {
     'Araba hızlı.', 'Çorba çok sıcak.', 'Dedem yaşlı ama erkek kardeşim genç.|Dedem yaşlı, ama kardeşim genç.', 'Tren yavaş ama ucuz.'],
   seasons: ['ilkbahar|bahar', 'yaz', 'sonbahar', 'kış', 'ay', 'yıl|sene', 'ocak', 'aralık',
     'İlkbaharda çiçekler açar.', 'Yazın yüzmeye gideriz.', 'Doğum günüm aralıkta.|Doğum günüm aralık ayında.', 'Bir yılda on iki ay vardır.|Bir yıl on iki aydır.'],
+  curse: ['hassiktir|bok', 'lanet olsun|kahretsin', 'kes sesini|kapa çeneni|sus', 'defol|defol git', 'canın cehenneme', 'ne halt|ne cehennem', 'siktir git|siktir', 'umurumda değil|sikimde değil',
+    'Kahretsin, otobüsü kaçırdım!', 'Lanet olsun, telefonum bozuldu!', 'Kes sesini ve beni dinle!|Sus ve beni dinle!', 'Ne halt ediyorsun?|Ne halt ediyorsun sen?'],
+  insults: ['aptal|salak', 'göt|şerefsiz', 'ahmak|budala', 'piç|alçak', 'pislik|adi', 'korkak', 'yalancı', 'kaçık|deli|manyak',
+    'Sen tam bir aptalsın!|Çok aptalsın!', 'Beni rahat bırak, şerefsiz!|Rahat bırak beni, şerefsiz!', 'O tam bir piç.|O gerçek bir alçak.', 'Korkak olma!'],
 };

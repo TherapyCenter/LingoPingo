@@ -65,4 +65,8 @@ export default {
     "La macchina è veloce.|L'auto è veloce.", 'La zuppa è troppo calda.', 'Mio nonno è vecchio, ma mio fratello è giovane.|Mio nonno è anziano, ma mio fratello è giovane.', 'Il treno è lento, ma economico.'],
   seasons: ['primavera', 'estate', 'autunno', 'inverno', 'mese', 'anno', 'gennaio', 'dicembre',
     'In primavera sbocciano i fiori.', "D'estate andiamo a nuotare.|In estate andiamo a nuotare.", 'Il mio compleanno è a dicembre.', 'Un anno ha dodici mesi.'],
+  curse: ['merda', 'dannazione|accidenti', 'stai zitto|chiudi il becco|zitto', 'vaffanculo|levati dalle palle', 'baciami il culo', 'che diavolo|che cazzo', 'fottiti', 'me ne frega un cazzo|chissenefrega',
+    "Merda, ho perso l'autobus!", 'Dannazione, il mio telefono è rotto!|Accidenti, il mio telefono è rotto!', 'Stai zitto e ascoltami!|Zitto e ascoltami!', 'Che diavolo stai facendo?|Che cazzo stai facendo?'],
+  insults: ['idiota|cretino', 'stronzo', 'scemo|stupido', 'bastardo', 'segaiolo|coglione', 'codardo|vigliacco|fifone', 'bugiardo|bugiarda', 'pazzo|matto|svitato',
+    'Sei proprio un idiota!|Sei un idiota!', 'Lasciami in pace, stronzo!', 'È un vero bastardo.', 'Non fare il codardo!|Non essere un codardo!'],
 };
