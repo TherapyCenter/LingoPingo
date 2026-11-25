@@ -141,6 +141,7 @@ export default {
     exTranslate: 'Übersetze diesen Satz',
     exTranslateNative: 'Übersetze auf {lang}',
     exListenBuild: 'Tippe, was du hörst',
+    showMeaning: 'Bedeutung der Wörter zeigen',
     exSpeak: 'Sprich diesen Satz',
     exMatch: 'Finde die Paare',
     tapToSpeak: 'Zum Sprechen tippen', listening: 'Ich höre zu …', tryAgain: 'Nochmal versuchen',

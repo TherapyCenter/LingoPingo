@@ -174,6 +174,7 @@ export default {
     exTranslate: 'Traduci questa frase',
     exTranslateNative: 'Traduci in {lang}',
     exListenBuild: 'Tocca quello che senti',
+    showMeaning: 'Mostra il significato delle parole',
     exSpeak: 'Pronuncia questa frase',
     exMatch: 'Trova le coppie',
     tapToSpeak: 'Tocca per parlare', listening: 'Ti ascolto…', tryAgain: 'Riprova',

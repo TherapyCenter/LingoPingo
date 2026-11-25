@@ -174,6 +174,7 @@ export default {
     exTranslate: 'Bu cümleyi çevir',
     exTranslateNative: 'Çevir ({lang})',
     exListenBuild: 'Duyduğuna dokun',
+    showMeaning: 'Kelimelerin anlamını göster',
     exSpeak: 'Bu cümleyi söyle',
     exMatch: 'Eşleri bul',
     tapToSpeak: 'Konuşmak için dokun', listening: 'Dinliyorum …', tryAgain: 'Tekrar dene',

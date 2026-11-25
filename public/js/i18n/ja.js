@@ -174,6 +174,7 @@ export default {
     exTranslate: 'この文を翻訳しよう',
     exTranslateNative: '{lang}に翻訳しよう',
     exListenBuild: '聞こえた言葉をタップしよう',
+    showMeaning: '単語の意味を表示',
     exSpeak: 'この文を言ってみよう',
     exMatch: 'ペアを見つけよう',
     tapToSpeak: 'タップして話す', listening: '聞いています…', tryAgain: 'もう一度',

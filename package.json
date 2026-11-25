@@ -1,6 +1,6 @@
 {
   "name": "lingopingo",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "description": "Playful language learning app in 9 languages (DE, EN, ES, FR, IT, HR, TR, ZH, JA)",
   "main": "server.js",
   "scripts": {

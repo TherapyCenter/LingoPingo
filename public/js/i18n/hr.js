@@ -174,6 +174,7 @@ export default {
     exTranslate: 'Prevedi ovu rečenicu',
     exTranslateNative: 'Prevedi ({lang})',
     exListenBuild: 'Dodirni što čuješ',
+    showMeaning: 'Prikaži značenje riječi',
     exSpeak: 'Izgovori ovu rečenicu',
     exMatch: 'Pronađi parove',
     tapToSpeak: 'Dodirni za govor', listening: 'Slušam …', tryAgain: 'Pokušaj ponovno',

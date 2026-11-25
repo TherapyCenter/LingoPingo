@@ -174,6 +174,7 @@ export default {
     exTranslate: '翻译这个句子',
     exTranslateNative: '翻译成{lang}',
     exListenBuild: '点选你听到的内容',
+    showMeaning: '显示词义',
     exSpeak: '说出这个句子',
     exMatch: '找出配对',
     tapToSpeak: '点击说话', listening: '正在听……', tryAgain: '再试一次',
