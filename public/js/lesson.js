@@ -1,5 +1,6 @@
 // Erzeugt Lektionen passend zu Fortschritt & Können und prüft Antworten.
-import { UNITS, LANGS, LESSONS_PER_UNIT, main, alts, itemsOfUnit, joinCjk } from './course.js';
+import { UNITS, LANGS, LESSONS_PER_UNIT, main, alts, itemsOfUnit, joinCjk, HAS_CJK } from './course.js';
+import { JA as READ_JA, ZH as READ_ZH } from './lang/readings.js';
 import { itemState, unitProgress, isUnitUnlocked, skillBonus } from './store.js';
 import { recognitionSupported, ttsSupported } from './audio.js';
 
@@ -32,6 +33,41 @@ function lev(a, b) {
   }
   return prev[n];
 }
+// Like lev, but swapping two neighbouring letters counts as one mistake ("guo" ~ "gou")
+function osa(a, b) {
+  const m = a.length, n = b.length;
+  if (!m || !n) return m || n;
+  const d = Array.from({ length: m + 1 }, (_, i) => [i, ...Array(n).fill(0)]);
+  for (let j = 1; j <= n; j++) d[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      const c = a[i - 1] === b[j - 1] ? 0 : 1;
+      d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + c);
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
+    }
+  }
+  return d[m][n];
+}
+
+// Japanese/Chinese typed in romaji/pinyin: compare without tones, long-vowel marks,
+// spaces and apostrophes ("wo he shui", "ni3 hao3", "arigatou", "watashiwaanadesu").
+const READINGS = { ja: READ_JA, zh: READ_ZH };
+function flatReading(x, lang) {
+  let f = strip(x).replace(/[\s'-]/g, '');
+  if (lang === 'zh') f = f.replace(/[1-5]/g, '').replace(/v/g, 'u');
+  if (lang === 'ja') f = f.replace(/ou/g, 'o').replace(/([aeiou])\1+/g, '$1');
+  return f;
+}
+// All accepted answers of a Japanese/Chinese entry as [shown answer, Latin reading] pairs.
+function cjkReadings(options, lang) {
+  const out = [];
+  const head = joinCjk(options[0]);
+  for (const a of options) {
+    if (!HAS_CJK.test(a)) out.push([head, a]);
+    else if (READINGS[lang]?.[a]) out.push([joinCjk(a), READINGS[lang][a]]);
+  }
+  return out;
+}
 
 // Prüft getippte Antworten: exakt / ohne Akzente / mit kleinem Tippfehler
 export function checkText(input, answerStr, lang) {
@@ -41,10 +77,16 @@ export function checkText(input, answerStr, lang) {
   if (!ni) return { ok: false, best };
   for (const a of options) if (norm(a) === ni) return { ok: true, best };
   if (LANGS[lang]?.cjk) {
-    // Pinyin/romaji: tones, long-vowel marks and spaces are optional ("wo he shui", "arigatou")
-    let flat = (x) => strip(x).replace(/[\s'-]/g, '');
-    if (lang === 'ja') { const f0 = flat; flat = (x) => f0(x).replace(/ou/g, 'o').replace(/([aeiou])\1+/g, '$1'); }
-    for (const a of options) if (flat(a) === flat(input)) return { ok: true, best };
+    // Answers may be typed in romaji/pinyin instead of characters, with small typos allowed
+    const fi = flatReading(input, lang);
+    const pairs = cjkReadings(options, lang);
+    for (const [, r] of pairs) if (flatReading(r, lang) === fi) return { ok: true, best };
+    for (const a of options) if (HAS_CJK.test(a) && norm(a).replace(/\s/g, '') === ni.replace(/\s/g, '')) return { ok: true, best };
+    for (const [shown, r] of pairs) {
+      const fr = flatReading(r, lang);
+      const allowed = fr.length >= 15 ? 3 : fr.length >= 8 ? 2 : fr.length >= 4 ? 1 : 0;
+      if (allowed && osa(fi, fr) <= allowed) return { ok: true, best: `${shown} (${r})`, note: 'typo' };
+    }
   }
   for (const a of options) if (strip(a) === si) return { ok: true, best: a, note: 'accents' };
   for (const a of options) {
@@ -52,7 +94,7 @@ export function checkText(input, answerStr, lang) {
     const allowed = sa.length >= 14 ? 2 : sa.length >= 5 ? 1 : 0;
     if (allowed && lev(si, sa) <= allowed) return { ok: true, best: a, note: 'typo' };
   }
-  return { ok: false, best: options[0] };
+  return { ok: false, best }; // Chinese/Japanese: shown without word gaps, with the reading
 }
 
 // Ähnlichkeit für Spracherkennung (0..1)
