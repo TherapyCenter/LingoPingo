@@ -6,6 +6,20 @@ import FR from './lang/fr.js';
 import TR from './lang/tr.js';
 import ZH from './lang/zh.js';
 import JA from './lang/ja.js';
+import GLOSS_JA, { ORDER as ORDER_JA } from './lang/gloss-ja.js';
+import GLOSS_ZH, { ORDER as ORDER_ZH } from './lang/gloss-zh.js';
+
+// Word glosses for the sentence tiles of Japanese/Chinese: reading + meaning in the
+// learner's language (English as fallback). Returns null for words without an entry.
+const GLOSS = { ja: [GLOSS_JA, ORDER_JA], zh: [GLOSS_ZH, ORDER_ZH] };
+export function gloss(word, lang, nat) {
+  const [dict, order] = GLOSS[lang] || [];
+  const e = dict?.[word];
+  if (!e) return null;
+  const f = e.split('|');
+  const i = order.indexOf(nat);
+  return { r: f[0], m: f[1 + (i >= 0 ? i : order.indexOf('en'))] };
+}
 
 export const LANGS = {
   de: { name: 'Deutsch', native: 'Deutsch', flag: '🇩🇪', tts: 'de-DE', accents: 'äöüß' },

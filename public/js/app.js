@@ -1,4 +1,4 @@
-import { LANGS, UNITS, LESSONS_PER_UNIT, main, itemsOfUnit, flag, disp, reading } from './course.js';
+import { LANGS, UNITS, LESSONS_PER_UNIT, main, itemsOfUnit, flag, disp, reading, gloss, joinCjk } from './course.js';
 import * as store from './store.js';
 import { sfx, speak, listen, setSoundEnabled, setSpeechRate, ttsSupported, recognitionSupported, hasVoice, voiceName, ensureVoices, stopSpeaking, isAndroidApp, isDesktopApp, isIOSApp } from './audio.js';
 import { buildSession, makeExercise, checkText, similarity, tokens, shuffle, norm, pauseSpeaking, highestUnit } from './lesson.js';
@@ -761,24 +761,52 @@ function textInput(ex, box, answerStr, placeholder) {
 
 function tileBuilder(ex, box, answerStr) {
   const area = $('.answer-area', box);
-  area.innerHTML = `<div class="tile-line" id="line"></div><div class="tile-bank" id="bank">${ex.tiles.map((t, i) => `<span class="slot"><button class="tile" data-i="${i}">${esc(t)}</button></span>`).join('')}</div>`;
+  const target = answerStr !== ex.item[nat()]; // tiles are in the language being learned
+  const cjk = target && T(ex).cjk;
+  // Target-language tiles get a speaker (hear the word without picking it);
+  // Japanese/Chinese tiles also show the reading and the meaning.
+  const tileHtml = (w) => {
+    const g = cjk ? gloss(w, ex.lang, nat()) : null;
+    return `<span class="tw">${esc(w)}</span>${g ? `<small class="tr">${esc(g.r)}</small><small class="tm">${esc(g.m)}</small>` : ''}${target ? '<span class="tspk" aria-label="play">🔊</span>' : ''}`;
+  };
+  area.innerHTML = `${target ? `<div class="line-tools"><button class="spk" id="playLine" aria-label="play">🔊</button><button class="spk slow" id="playLineSlow" aria-label="play slowly">🐢</button></div>` : ''}
+    <div class="tile-line ${cjk ? 'gl-line' : ''}" id="line"></div><div class="tile-bank" id="bank">${ex.tiles.map((w, i) => `<span class="slot"><button class="tile ${cjk ? 'gl' : ''}" data-i="${i}" data-w="${esc(w)}">${tileHtml(w)}</button></span>`).join('')}</div>`;
   const line = $('#line', area);
   const chosen = [];
   const refresh = () => setReady(chosen.length > 0);
-  $$('#bank .tile', area).forEach((t) => t.onclick = () => {
-    if (ctrl.answered || t.classList.contains('used')) return;
-    sfx.pop();
-    t.classList.add('used');
-    const c = document.createElement('button');
-    c.className = 'tile placed'; c.textContent = t.textContent; c.dataset.i = t.dataset.i;
-    c.onclick = () => { if (ctrl.answered) return; sfx.tap(); c.remove(); t.classList.remove('used'); chosen.splice(chosen.indexOf(+c.dataset.i), 1); refresh(); };
-    line.appendChild(c);
-    chosen.push(+t.dataset.i);
-    if (ex.lang && answerStr !== ex.item[nat()]) say(t.textContent);
-    refresh();
+  const builtText = () => $$('.tile', line).map((x) => x.dataset.w).join(' ');
+  const bindTileSpeaker = (tile) => {
+    const s = $('.tspk', tile);
+    if (s) s.onclick = (e) => { e.stopPropagation(); sfx.tap(); say(tile.dataset.w); };
+  };
+  const playLine = (btn, slow) => {
+    const s = builtText();
+    if (!s) return;
+    btn.classList.add('playing');
+    say(T(ex).cjk ? joinCjk(s) : s, { slow }).then(() => btn.classList.remove('playing'));
+  };
+  if (target) {
+    $('#playLine', area).onclick = (e) => playLine(e.currentTarget, false);
+    $('#playLineSlow', area).onclick = (e) => playLine(e.currentTarget, true);
+  }
+  $$('#bank .tile', area).forEach((t) => {
+    bindTileSpeaker(t);
+    t.onclick = () => {
+      if (ctrl.answered || t.classList.contains('used')) return;
+      sfx.pop();
+      t.classList.add('used');
+      const c = document.createElement('button');
+      c.className = t.className.replace('used', '') + ' placed'; c.innerHTML = t.innerHTML; c.dataset.i = t.dataset.i; c.dataset.w = t.dataset.w;
+      bindTileSpeaker(c);
+      c.onclick = () => { if (ctrl.answered) return; sfx.tap(); c.remove(); t.classList.remove('used'); chosen.splice(chosen.indexOf(+c.dataset.i), 1); refresh(); };
+      line.appendChild(c);
+      chosen.push(+t.dataset.i);
+      if (target) say(t.dataset.w);
+      refresh();
+    };
   });
   ctrl.check = () => {
-    const built = $$('.tile', line).map((x) => x.textContent).join(' ');
+    const built = builtText();
     return checkText(built, answerStr, answerStr === ex.item[nat()] ? nat() : ex.lang).ok ? { ok: true } : { ok: false, best: disp(answerStr) };
   };
 }
