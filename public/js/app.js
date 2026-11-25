@@ -3,7 +3,7 @@ import * as store from './store.js';
 import { sfx, speak, listen, setSoundEnabled, setSpeechRate, ttsSupported, recognitionSupported, hasVoice, voiceName, ensureVoices, stopSpeaking, isAndroidApp, isDesktopApp, isIOSApp } from './audio.js';
 import { buildSession, makeExercise, checkText, similarity, tokens, shuffle, norm, pauseSpeaking, highestUnit } from './lesson.js';
 import { t, langName, langInText, leagueName, achText, unitTitle, unitTip, praise, setUiLang, initialUiLang, uiLang, locale, UI_LANGS } from './i18n.js';
-import { mascot } from './mascot.js';
+import { mascot, setMascotStyle } from './mascot.js';
 import { confetti } from './fx.js';
 
 const $app = document.getElementById('app');
@@ -52,12 +52,21 @@ function clearTimers() { timers.forEach((t) => { clearTimeout(t); clearInterval(
 function applySettings() {
   setSoundEnabled(P.settings.sound);
   setSpeechRate(P.settings.rate);
+  setAdultLook(!!P.settings.adult);
+}
+// 18+ mode gets its own dark look and "Bad Pingo"; every other screen stays friendly.
+function setAdultLook(on) {
+  document.body.classList.toggle('adult-mode', on);
+  setMascotStyle(on ? 'bad' : 'normal');
+  const tc = document.querySelector('meta[name="theme-color"]');
+  if (tc) tc.content = on ? '#1a0f1c' : '#58cc02';
 }
 const say = (text, opts) => { if (P?.settings.tts) return speak(text, lang(), opts); return Promise.resolve(); };
 
 // ========== Profil-Auswahl ==========
 async function renderProfiles() {
   clearTimers();
+  setAdultLook(false);
   $app.innerHTML = `<div class="screen center welcome">
     <div class="ui-lang">🌍 ${uiSelect('uisel', uiLang())}</div>
     <div class="bounce-in">${mascot('cheer', 140)}</div>
@@ -370,6 +379,7 @@ function adultEasterEgg() {
   const ok = () => {
     if (inp.value !== ADULT_PIN) { sfx.wrong(); inp.value = ''; inp.classList.add('shake'); setTimeout(() => inp.classList.remove('shake'), 500); return; }
     P.settings.adult = !on; store.save(P, true); sfx.pop(); closeModal();
+    applySettings(); renderHome();
     toast(t(on ? 'adultOff' : 'adultOn'));
   };
   $('#pinok').onclick = ok;

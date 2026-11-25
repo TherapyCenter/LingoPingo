@@ -384,3 +384,19 @@ h1, h2, h3 { margin: .3em 0; font-weight: 800; }
 .lp-btn { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 7px 2px; border-radius: 12px; border: 2px solid var(--line); background: var(--card); color: var(--text); cursor: pointer; }
 .lp-btn small { font-size: .7rem; font-weight: 700; }
 .lp-btn.sel { border-color: var(--blue); background: color-mix(in srgb, var(--blue) 12%, var(--card)); }
+
+/* ---------- 18+ mode: dark, edgy look (set on <body> by the PIN easter egg) ---------- */
+body.adult-mode {
+  --green: #e0115f; --green-d: #a3003f; --green-l: #3d0f22;
+  --blue: #9b5cff; --blue-d: #7234d6;
+  --gold: #ffb000; --gold-d: #d48f00;
+  --red-l: #3f1d1f;
+  --bg: #120c14; --bg2: #1d1420; --card: #1d1420;
+  --text: #f3eaf5; --muted: #a596aa; --line: #3a2a40; --line-d: #2a1d2f;
+  color-scheme: dark;
+  background: radial-gradient(120% 60% at 50% -10%, #2e1034 0, var(--bg) 60%) fixed;
+}
+html:has(body.adult-mode) { background: #120c14; }
+body.adult-mode h1, body.adult-mode h2, body.adult-mode .tab-title { letter-spacing: .02em; text-shadow: 0 0 18px rgba(224, 17, 95, .35); }
+body.adult-mode .extra.streak-x { background: #3a2410; color: #ffb35c; }
+body.adult-mode .extra.lvl { background: #3a3010; color: #ffd45c; }
