@@ -764,10 +764,10 @@ function tileBuilder(ex, box, answerStr) {
   const target = answerStr !== ex.item[nat()]; // tiles are in the language being learned
   const cjk = target && T(ex).cjk;
   // Target-language tiles get a speaker (hear the word without picking it);
-  // Japanese/Chinese tiles also show the reading and the meaning.
+  // Japanese/Chinese tiles also show the reading (romaji/pinyin), never the meaning: that would give the answer away.
   const tileHtml = (w) => {
     const g = cjk ? gloss(w, ex.lang, nat()) : null;
-    return `<span class="tw">${esc(w)}</span>${g ? `<small class="tr">${esc(g.r)}</small><small class="tm">${esc(g.m)}</small>` : ''}${target ? '<span class="tspk" aria-label="play">🔊</span>' : ''}`;
+    return `<span class="tw">${esc(w)}</span>${g ? `<small class="tr">${esc(g.r)}</small>` : ''}${target ? '<span class="tspk" aria-label="play">🔊</span>' : ''}`;
   };
   area.innerHTML = `${target ? `<div class="line-tools"><button class="spk" id="playLine" aria-label="play">🔊</button><button class="spk slow" id="playLineSlow" aria-label="play slowly">🐢</button></div>` : ''}
     <div class="tile-line ${cjk ? 'gl-line' : ''}" id="line"></div><div class="tile-bank" id="bank">${ex.tiles.map((w, i) => `<span class="slot"><button class="tile ${cjk ? 'gl' : ''}" data-i="${i}" data-w="${esc(w)}">${tileHtml(w)}</button></span>`).join('')}</div>`;
