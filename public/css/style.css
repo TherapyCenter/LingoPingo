@@ -174,7 +174,7 @@ h1, h2, h3 { margin: .3em 0; font-weight: 800; }
 
 .profile-head { display: flex; align-items: center; gap: 16px; margin-top: 14px; }
 .pin-in { font-size: 1.6rem; text-align: center; letter-spacing: .4em; margin: 6px 0 14px; }
-.big-av { cursor: default; -webkit-tap-highlight-color: transparent; user-select: none;  font-size: 3.4rem; width: 86px; height: 86px; border-radius: 50%; display: grid; place-items: center; background: var(--bg2); border: 3px dashed var(--line-d); }
+.big-av { cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; font: inherit; color: inherit; padding: 0; line-height: 1; font-size: 3.4rem; width: 86px; height: 86px; border-radius: 50%; display: grid; place-items: center; background: var(--bg2); border: 3px dashed var(--line-d); }
 .lvl-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
 .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .stat { border: 2px solid var(--line); border-radius: 14px; padding: 12px; display: grid; grid-template-columns: auto 1fr; column-gap: 10px; align-items: center; }

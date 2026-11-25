@@ -312,7 +312,7 @@ function profileTab() {
   const maxD = Math.max(P.dailyGoal, ...days.map((d) => d[1]));
   const s = P.settings;
   const toggle = (k, label, dis = false) => `<label class="toggle ${dis ? 'dis' : ''}"><span>${label}</span><input type="checkbox" data-set="${k}" ${s[k] ? 'checked' : ''} ${dis ? 'disabled' : ''}><i></i></label>`;
-  return `<div class="profile-head"><div class="big-av">${esc(P.avatar)}</div><div><h2>${esc(P.name)}</h2>
+  return `<div class="profile-head"><button type="button" class="big-av" aria-label="${esc(P.name)}">${esc(P.avatar)}</button><div><h2>${esc(P.name)}</h2>
       <p class="muted">${store.leagueOf(P.xp).icon} ${t('league', { name: lgName(store.leagueOf(P.xp)) })} · ${t('since', { date: new Date(P.createdAt).toLocaleDateString(locale()) })}</p></div></div>
     <div class="card"><div class="lvl-row"><b>${t('level', { n: lv })}</b><span class="muted">${P.xp - cur} / ${nxt - cur} XP</span></div><div class="bar"><div class="fill gold" style="width:${pct}%"></div></div></div>
     <div class="stats-grid">
