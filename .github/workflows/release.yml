@@ -176,18 +176,16 @@ jobs:
       - name: Upload IPA to release
         run: gh release upload "$TAG" LingoPingo-unsigned.ipa "LingoPingo-$TAG-unsigned.ipa" --clobber
 
-  # Web app for iPhone & browsers on GitHub Pages (Safari: Share -> Add to Home Screen)
-  pages:
+  # Web app for iPhone & browsers on GitHub Pages (Safari: Share -> Add to Home Screen).
+  # Upload and deploy run as separate jobs: when deploy-pages runs right after the upload
+  # in the same job, the artifact is often not listed yet and the deploy fails.
+  pages-build:
     needs: [prepare, android]
     if: needs.prepare.outputs.build == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
+      pages: read
     steps:
       - uses: actions/checkout@v5
       - name: Prepare site
@@ -196,5 +194,16 @@ jobs:
       - uses: actions/upload-pages-artifact@v5
         with:
           path: public
+
+  pages:
+    needs: pages-build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
       - id: deploy
         uses: actions/deploy-pages@v5
